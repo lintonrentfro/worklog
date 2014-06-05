@@ -1,0 +1,355 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkLog</title>
+</head>
+<body>
+    <div class="container">
+        {{>nav}}
+        {{#if home}}
+            {{>home}}
+        {{/if}}
+        {{#if page1}}
+            Log 1.
+        {{/if}}
+        {{#if page2}}
+            Log 2.
+        {{/if}}
+        {{#if page3}}
+            {{>settings}}
+        {{/if}}
+    </div>
+</body>
+
+<template name="home">
+    <div class="row">
+        <div class="span12">Homepage stuff.</div>
+    </div>
+</template>
+
+<template name="settings">
+    {{#if edit_task}}
+        <div class="row">
+                <div class="span10">
+                    <h3>Edit Task</h3>
+                </div>
+                <div class="span2">
+                    <span class="pull-right"><h2><a id="close_edit_task" href="javascript:void(0)">close</a></h2></span>
+                </div>
+            </div>
+        <div class="row">
+            <div class="span12">
+                <form class="form">
+                    <label>Position</label>
+                    <input class="span2" type="text" id="new_position" value="{{edit_task.position}}"></br>
+                    <label>Name</label>
+                    <input class="span4" type="text" id="new_task_name" value="{{edit_task.name}}"></br>
+                    <label>Daily Deadline</label>
+                    <input class="span3" type="text" id="new_deadline" value="{{edit_task.deadline}}"></br>
+                    <label>Notes</label>
+                    <input class="span6" type="text" id="new_notes" value="{{edit_task.notes}}"></br>
+                    <button type="btn" class="btn" id="update_task">update task</button>
+                </form>
+            </div>
+        </div>
+    {{else}}
+        {{#if edit_work_item}}
+            <div class="row">
+                <div class="span12">
+                    <h2>Editing Work Item: {{edit_work_item.name}}</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span10">
+                    <h3>Edit Name</h3>
+                </div>
+                <div class="span2">
+                    <span class="pull-right"><h2><a id="close_edit_workitem" href="javascript:void(0)">close</a></h2></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <form class="form">
+                        <div id="workitem_group" class="control-group {{#if error_edit_workitem_form}}{{error_edit_workitem_form}}{{/if}}">
+                            <input type="text" value="{{edit_work_item.name}}" id="name">
+                        </div>
+                        <button type="btn" class="btn" id="update_workitem_name">update name</button>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h3>Add Task</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <form class="form">
+                        <label>Position</label>
+                        <input class="span2" type="text" id="position" placeholder="example: 3"></br>
+                        <label>Name</label>
+                        <input class="span4" type="text" id="task_name"></br>
+                        <label>Daily Deadline</label>
+                        <input class="span3" type="text" id="deadline" placeholder="example: 14:30"></br>
+                        <label>Notes</label>
+                        <input class="span6" type="text" id="notes"></br>
+                        <button type="btn" class="btn" id="add_task">add task</button>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h3>Manage Tasks</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    {{#if edit_work_item.tasks}}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>position</th>
+                                    <th>name</th>
+                                    <th>deadline</th>
+                                    <th>notes</th>
+                                    <th>edit</th>
+                                    <th>delete</th>
+                                </tr>
+                            </thead>
+                            {{#each key_value edit_work_item.tasks}}
+                                <tr>
+                                    <td>{{value.position}}</td>
+                                    <td>{{value.name}}</td>
+                                    <td>{{value.deadline}}</td>
+                                    <td>{{value.notes}}</td>
+                                    <td><span class="edit_task"><a href="javascript:void(0)">edit</a></span></td>
+                                    <td><span class="delete_task"><a href="javascript:void(0)">delete</a></span></td>
+                                </tr>
+                            {{/each}}
+                        </table>
+                    {{else}}
+                        none
+                    {{/if}}
+                </div>
+            </div>
+        {{else}}
+            <div class="row">
+                <div class="span12 gray">
+                    <h2>Workers</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12 gray">
+                    <h3>Add New Worker</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12 gray">
+                    <form class="form">
+                        <div>
+                            <div id="username_group" class="control-group {{#if error_new_worker_form}}{{error_new_worker_form}}{{/if}}">
+                                <input type="text" class="span2" placeholder="username" id="username">
+                                <input type="text" class="span2" placeholder="password" id="password">
+                            </div>
+                            <button type="btn" class="btn" id="add_worker">add worker</button>
+                        </div>
+                    </form>
+                    <h3>Manage Workers</h3>
+                    {{#if workers}}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>username</th>
+                                    <th>password</th>
+                                    <th>delete</th>
+                                </tr>
+                            </thead>
+                            {{#each key_value workers}}
+                                <tr>
+                                    <td>{{value.username}}</td>
+                                    <td>{{value.password}}</td>
+                                    <td><span class="delete_worker"><a href="javascript:void(0)">delete</a></span></td>
+                                </tr>
+                            {{/each}}
+                        </table>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h2>Work Items</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h3>Add New Work Item</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <form class="form">
+                        <div>
+                            <div id="workitem_group" class="control-group {{#if error_new_workitem_form}}{{error_new_workitem_form}}{{/if}}">
+                                <input type="text" class="span2" placeholder="name" id="name">
+                            </div>
+                            <button type="btn" class="btn" id="add_workitem">add work item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h3>Manage Work Items</h3>
+                    {{#if work_items}}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>name</th>
+                                    <th>last modified</th>
+                                    <th>edit</th>
+                                    <th>delete</th>
+                                </tr>
+                            </thead>
+                            {{#each key_value work_items}}
+                                <tr>
+                                    <td>{{value.name}}</td>
+                                    <td>{{value.last_modified}}</td>
+                                    <td><span class="edit_workitem"><a href="javascript:void(0)">edit</a></span></td>
+                                    <td><span class="delete_workitem"><a href="javascript:void(0)">delete</a></span></td>
+                                </tr>
+                            {{/each}}
+                        </table>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12 gray">
+                    <h2>Work Item Groups</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12 gray">
+                    <h3>Add New Work Item Group</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12 gray">
+                    <form class="form">
+                        <div>
+                            <div id="workitem_group_group" class="control-group">
+                                <input type="text" class="span2" placeholder="name" id="work_item_group_name">
+                            </div>
+                            <button type="btn" class="btn" id="add_work_item_group">add work item group</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12 gray">
+                    <h3>Manage Work Item Groups</h3>
+                    {{#if work_item_groups}}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>name</th>
+                                    <th>delete</th>
+                                </tr>
+                            </thead>
+                            {{#each key_value work_item_groups}}
+                                <tr>
+                                    <td>{{value.name}}</td>
+                                    <td><span class="delete_work_item_group"><a href="javascript:void(0)">delete</a></span></td>
+                                </tr>
+                            {{/each}}
+                        </table>
+                    {{else}}
+                        none
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h2>Task Groups</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h3>Add New Task Group</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <form class="form">
+                        <div>
+                            <div id="task_group_group" class="control-group">
+                                <input type="text" class="span2" placeholder="name" id="task_group_name">
+                            </div>
+                            <button type="btn" class="btn" id="add_task_group">add task group</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h3>Manage Task Groups</h3>
+                    {{#if task_groups}}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>name</th>
+                                    <th>delete</th>
+                                </tr>
+                            </thead>
+                            {{#each key_value task_groups}}
+                                <tr>
+                                    <td>{{value.name}}</td>
+                                    <td><span class="delete_task_group"><a href="javascript:void(0)">delete</a></span></td>
+                                </tr>
+                            {{/each}}
+                        </table>
+                    {{else}}
+                        none
+                    {{/if}}
+                </div>
+            </div>
+        {{/if}}
+    {{/if}}
+</template>
+
+<template name="nav">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <a id="home" class="brand" href="javascript:void(0)">WorkLog</a>
+            <ul class="nav">
+                {{#if is_logged_in}}
+                    <li id="page1" class="{{#if page1}}{{page1}}{{/if}}">
+                        <a href="javascript:void(0)">Page1</a>
+                    </li>
+                    <li id="page2" class="{{#if page2}}{{page2}}{{/if}}">
+                        <a href="javascript:void(0)">Page2</a>
+                    </li>
+                {{/if}}
+                {{#if is_admin}}
+                    <li id="page3" class="{{#if page3}}{{page3}}{{/if}}">
+                        <a href="javascript:void(0)">Settings</a>
+                    </li>
+                {{/if}}
+            </ul>
+
+            {{#if is_logged_in}}
+                <form class="navbar-form pull-right">
+                    <button type="btn" class="btn" id="logout">logout as {{is_logged_in.username}}</button>
+                </form>
+            {{else}}
+                <form class="navbar-form pull-right">
+                    <div id="login_form">
+                        <div id="username_group" class="control-group {{#if error_form_login}}{{error_form_login}}{{/if}}">
+                        <input type="text" class="span2" placeholder="username" id="username">
+                        <input type="password" class="span2" placeholder="password" id="password">
+                        <button type="btn" class="btn" id="login">login</button>
+                    </div>
+                </form>
+            {{/if}}
+        </div>
+    </div>
+</template>
