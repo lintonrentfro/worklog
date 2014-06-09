@@ -61,6 +61,14 @@ Handlebars.registerHelper('key_value', function(context, options) {
 });
 
 /*
+ Sweet Helper to Output "selected" in Forms if Matching Value Found
+*/
+Handlebars.registerHelper('selected', function(foo, bar) {
+  return foo == bar ? ' selected' : '';
+});
+
+
+/*
  Nav
  */
 Template.nav.error_form_login = function() {
@@ -240,7 +248,8 @@ Template.settings.events({
                     {
                         name : name,
                         last_modified : now,
-                        tasks : []
+                        tasks : [],
+                        groups : []
                     }
                 );
                 Session.set("error_new_workitem_form",null);
@@ -261,7 +270,7 @@ Template.settings.events({
         };
     },
     "click .edit_workitem" : function() {
-        // console.log(this);
+        console.log(this);
         var id = this.value._id;
         var edit_work_item = work_items.findOne(
             {
@@ -273,7 +282,7 @@ Template.settings.events({
     "click #close_edit_workitem" : function() {
         Session.set("edit_work_item",null);
     },
-    "click #update_workitem_name" : function() {
+    "click #update_work_item_name" : function() {
         var name = document.getElementById('name').value;
         if(name) {
             var now = new Date();
@@ -292,10 +301,61 @@ Template.settings.events({
         };
         return false;
     },
+    "click .add_work_item_group_to_work_item" : function() {
+        var id = Session.get("edit_work_item")._id;
+        var group = this.value.name;
+        var now = new Date();
+        var work_item = work_items.findOne(
+            {
+                _id : id
+            }
+        );
+        var array_key = work_item.groups.indexOf(group);
+        if(array_key != -1) {
+            console.log("group already added");
+        } else {
+            work_items.update(
+                {
+                    _id : id
+                },
+                { 
+                    $push :
+                        {
+                            groups : group
+                        },
+                    $set :
+                        {
+                            last_modified : now
+                        }
+                }
+            );
+        };
+    },
+    "click .remove_work_item_group_from_work_item" : function() {
+        var id = Session.get("edit_work_item")._id;
+        var group = this.value;
+        var now = new Date();
+        work_items.update(
+            {
+                _id : id
+            },
+            {
+                $pull :
+                    {
+                        groups : group
+                    },
+                $set :
+                    {
+                        last_modified : now
+                    }
+            }
+        );
+    },
     "click #add_task" : function() {
         var position = document.getElementById('position').value;
         var name = document.getElementById('task_name').value;
         var deadline = document.getElementById('deadline').value;
+        var task_group = document.getElementById('task_group').value;
         var notes = document.getElementById('notes').value;
         var id = Session.get("edit_work_item")._id;
         var new_task = 
@@ -303,6 +363,7 @@ Template.settings.events({
                 position : position,
                 name : name,
                 deadline : deadline,
+                task_group : task_group,
                 notes : notes
             };
         if(name && position) {
@@ -325,6 +386,7 @@ Template.settings.events({
         var edit_task = {
             name : this.value.name,
             position : this.value.position,
+            task_group : this.value.task_group,
             notes : this.value.notes,
             deadline : this.value.deadline
         };
@@ -341,6 +403,7 @@ Template.settings.events({
                     position : this.value.position,
                     name : this.value.name,
                     deadline : this.value.deadline,
+                    task_group : this.value.task_group,
                     notes : this.value.notes
                 };
             var work_item = Session.get("edit_work_item");
@@ -365,6 +428,7 @@ Template.settings.events({
                 position : document.getElementById('new_position').value,
                 name : document.getElementById('new_task_name').value,
                 deadline : document.getElementById('new_deadline').value,
+                task_group : document.getElementById('new_task_group').value,
                 notes : document.getElementById('new_notes').value
             };
         var obj = {};

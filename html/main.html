@@ -46,6 +46,8 @@
                     <input class="span4" type="text" id="new_task_name" value="{{edit_task.name}}"></br>
                     <label>Daily Deadline</label>
                     <input class="span3" type="text" id="new_deadline" value="{{edit_task.deadline}}"></br>
+                    <label>Task Group</label>
+                    <input class="span4" type="text" id="new_task_group" value="{{edit_task.task_group}}"></br>
                     <label>Notes</label>
                     <input class="span6" type="text" id="new_notes" value="{{edit_task.notes}}"></br>
                     <button type="btn" class="btn" id="update_task">update task</button>
@@ -55,13 +57,8 @@
     {{else}}
         {{#if edit_work_item}}
             <div class="row">
-                <div class="span12">
-                    <h2>Editing Work Item: {{edit_work_item.name}}</h2>
-                </div>
-            </div>
-            <div class="row">
                 <div class="span10">
-                    <h3>Edit Name</h3>
+                    <h2>Editing Work Item: {{edit_work_item.name}}</h2>
                 </div>
                 <div class="span2">
                     <span class="pull-right"><h2><a id="close_edit_workitem" href="javascript:void(0)">close</a></h2></span>
@@ -70,11 +67,41 @@
             <div class="row">
                 <div class="span12">
                     <form class="form">
-                        <div id="workitem_group" class="control-group {{#if error_edit_workitem_form}}{{error_edit_workitem_form}}{{/if}}">
-                            <input type="text" value="{{edit_work_item.name}}" id="name">
-                        </div>
-                        <button type="btn" class="btn" id="update_workitem_name">update name</button>
+                        <label>Name</label>
+                        <input type="text" value="{{edit_work_item.name}}" id="name">
+                        </br>
+                        <button type="btn" class="btn" id="update_work_item_name">update work item name</button>
                     </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span6">
+                    <b>This Work Item's Groups (click to remove)</b>
+                    </br>
+                    {{#if edit_work_item.groups}}
+                        {{#each key_value edit_work_item.groups}}
+                            <span class="remove_work_item_group_from_work_item">
+                                <a href="javascript:void(0)">
+                                    {{value}}
+                                </a>
+                            </span>
+                            </br>
+                        {{/each}}
+                    {{/if}}
+                </div>
+                <div class="span6">
+                    <b>All Work Item Groups (click to add)</b>
+                    </br>
+                    {{#if work_item_groups}}
+                        {{#each key_value work_item_groups}}
+                            <span class="add_work_item_group_to_work_item">
+                                <a href="javascript:void(0)">
+                                    {{value.name}}
+                                </a>
+                            </span>
+                            </br>
+                        {{/each}}
+                    {{/if}}
                 </div>
             </div>
             <div class="row">
