@@ -46,12 +46,38 @@
                     <input class="span4" type="text" id="new_task_name" value="{{edit_task.name}}"></br>
                     <label>Daily Deadline</label>
                     <input class="span3" type="text" id="new_deadline" value="{{edit_task.deadline}}"></br>
-                    <label>Task Group</label>
-                    <input class="span4" type="text" id="new_task_group" value="{{edit_task.task_group}}"></br>
                     <label>Notes</label>
                     <input class="span6" type="text" id="new_notes" value="{{edit_task.notes}}"></br>
                     <button type="btn" class="btn" id="update_task">update task</button>
                 </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span6">
+                <b>This Task's Group (click to remove)</b>
+                </br>
+                {{#if edit_task.group}}
+                    <span id="remove_task_group_from_task">
+                        <a href="javascript:void(0)">
+                            {{edit_task.group}}
+                        </a>
+                    </span>
+                    </br>
+                {{/if}}
+            </div>
+            <div class="span6">
+                <b>All Task Groups (click to add)</b>
+                </br>
+                {{#if task_groups}}
+                    {{#each key_value task_groups}}
+                        <span class="add_task_group_to_task">
+                            <a href="javascript:void(0)">
+                                {{value.name}}
+                            </a>
+                        </span>
+                        </br>
+                    {{/each}}
+                {{/if}}
             </div>
         </div>
     {{else}}

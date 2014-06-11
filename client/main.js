@@ -6,8 +6,7 @@
 /*
  Normal Startup
  */
-Session.set("home","active");
-
+// Session.set("home","active");
 
 /*
  Global Template Nav Helpers
@@ -78,7 +77,12 @@ Template.nav.error_form_login = function() {
 };
 Template.nav.events({
     "click #home" : function() {
-        wl.set_route("home");
+        /*
+            DEV SHORTCUT - NOT TO BE USED IN LIVE VERSION
+        */
+        wl.set_route("page3");
+        var this_user = workers.findOne({username:"admin",password:"coffee"});
+        Session.set("user",this_user);
     },
     "click #page1" : function() {
         wl.set_route("page1");
@@ -351,11 +355,80 @@ Template.settings.events({
             }
         );
     },
+    "click .add_task_group_to_task" : function() {
+        var new_group = this.value.name;
+        var id = Session.get("edit_work_item")._id;
+        var group = this.value.name;
+        var now = new Date();
+        var work_item = work_items.findOne(
+            {
+                _id : id
+            }
+        );
+        var task_key = Session.get("edit_task_key");
+        if(work_item.tasks[task_key].group != new_group) {
+            var now = new Date();
+            var obj = {};
+            var field = "tasks." + task_key + ".group";
+            obj[field] = new_group;
+            work_items.update(
+                {
+                    _id : id
+                },
+                {
+                    $set : obj,
+                    $set :
+                        {
+                            last_modified : now
+                        }
+                }
+            );
+        };
+        var new_edit_task = {};
+        new_edit_task.name = Session.get("edit_task").name;
+        new_edit_task.position = Session.get("edit_task").position;
+        new_edit_task.group = new_group;
+        new_edit_task.notes = Session.get("edit_task").notes;
+        new_edit_task.deadline = Session.get("edit_task").deadline;
+        Session.set("edit_task",new_edit_task);
+    },
+    "click .remove_task_group_from_task" : function() {
+        // var new_group = this.value.name;
+        var id = Session.get("edit_work_item")._id;
+        // var group = this.value.name;
+        var now = new Date();
+        var work_item = work_items.findOne(
+            {
+                _id : id
+            }
+        );
+        var task_key = Session.get("edit_task_key");
+        if(work_item.tasks[task_key].group != new_group) {
+            console.log("adding task group to task");
+            var obj = {};
+            var field = "tasks." + task_key + ".group";
+            obj[field] = new_group;
+            work_items.update(
+                {
+                    _id : id
+                },
+                {
+                    $set : obj
+                }
+            );
+        };
+        var new_edit_task = {};
+        new_edit_task.name = Session.get("edit_task").name;
+        new_edit_task.position = Session.get("edit_task").position;
+        new_edit_task.group = new_group;
+        new_edit_task.notes = Session.get("edit_task").notes;
+        new_edit_task.deadline = Session.get("edit_task").deadline;
+        Session.set("edit_task",new_edit_task);
+    },
     "click #add_task" : function() {
         var position = document.getElementById('position').value;
         var name = document.getElementById('task_name').value;
         var deadline = document.getElementById('deadline').value;
-        var task_group = document.getElementById('task_group').value;
         var notes = document.getElementById('notes').value;
         var id = Session.get("edit_work_item")._id;
         var new_task = 
@@ -363,7 +436,6 @@ Template.settings.events({
                 position : position,
                 name : name,
                 deadline : deadline,
-                task_group : task_group,
                 notes : notes
             };
         if(name && position) {
@@ -388,7 +460,8 @@ Template.settings.events({
             position : this.value.position,
             task_group : this.value.task_group,
             notes : this.value.notes,
-            deadline : this.value.deadline
+            deadline : this.value.deadline,
+            group : this.value.group
         };
         Session.set("edit_task_key",this.key);
         Session.set("edit_task",edit_task);
@@ -421,6 +494,7 @@ Template.settings.events({
         };
     },
     "click #update_task" : function() {
+        var now = new Date();
         var task_key = Session.get("edit_task_key");
         var work_item = Session.get("edit_work_item");
         var new_task = 
@@ -428,7 +502,6 @@ Template.settings.events({
                 position : document.getElementById('new_position').value,
                 name : document.getElementById('new_task_name').value,
                 deadline : document.getElementById('new_deadline').value,
-                task_group : document.getElementById('new_task_group').value,
                 notes : document.getElementById('new_notes').value
             };
         var obj = {};
@@ -439,7 +512,11 @@ Template.settings.events({
                 "_id" : work_item._id
             },
             {
-                $set : obj
+                $set : obj,
+                $set :
+                    {
+                        last_modified : now
+                    }
             }
         );
         Session.set("edit_task_key",null);
