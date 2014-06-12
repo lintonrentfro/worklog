@@ -369,18 +369,16 @@ Template.settings.events({
         if(work_item.tasks[task_key].group != new_group) {
             var now = new Date();
             var obj = {};
-            var field = "tasks." + task_key + ".group";
-            obj[field] = new_group;
+            var field1 = "tasks." + task_key + ".group";
+            obj[field1] = new_group;
+            var field2 = "last_modified";
+            obj[field2] = now;
             work_items.update(
                 {
                     _id : id
                 },
                 {
-                    $set : obj,
-                    $set :
-                        {
-                            last_modified : now
-                        }
+                    $set : obj
                 }
             );
         };
@@ -392,10 +390,9 @@ Template.settings.events({
         new_edit_task.deadline = Session.get("edit_task").deadline;
         Session.set("edit_task",new_edit_task);
     },
-    "click .remove_task_group_from_task" : function() {
-        // var new_group = this.value.name;
+    "click #remove_task_group_from_task" : function() {
+        var new_group = "";
         var id = Session.get("edit_work_item")._id;
-        // var group = this.value.name;
         var now = new Date();
         var work_item = work_items.findOne(
             {
@@ -403,20 +400,19 @@ Template.settings.events({
             }
         );
         var task_key = Session.get("edit_task_key");
-        if(work_item.tasks[task_key].group != new_group) {
-            console.log("adding task group to task");
-            var obj = {};
-            var field = "tasks." + task_key + ".group";
-            obj[field] = new_group;
-            work_items.update(
-                {
-                    _id : id
-                },
-                {
-                    $set : obj
-                }
-            );
-        };
+        var obj = {};
+        var field1 = "tasks." + task_key + ".group";
+        obj[field1] = new_group;
+        var field2 = "last_modified";
+        obj[field2] = now;
+        work_items.update(
+            {
+                _id : id
+            },
+            {
+                $set : obj
+            }
+        );
         var new_edit_task = {};
         new_edit_task.name = Session.get("edit_task").name;
         new_edit_task.position = Session.get("edit_task").position;
@@ -494,29 +490,35 @@ Template.settings.events({
         };
     },
     "click #update_task" : function() {
+        var current_group = document.getElementById('remove_task_group_from_task').innerHTML;
+        // console.log(group);
         var now = new Date();
         var task_key = Session.get("edit_task_key");
         var work_item = Session.get("edit_work_item");
+        var task_group = work_items.findOne(
+            {
+                "_id" : work_item._id
+            }
+        );
         var new_task = 
             {
                 position : document.getElementById('new_position').value,
                 name : document.getElementById('new_task_name').value,
                 deadline : document.getElementById('new_deadline').value,
-                notes : document.getElementById('new_notes').value
+                notes : document.getElementById('new_notes').value,
+                group : current_group
             };
         var obj = {};
         var field = "tasks." + task_key;
         obj[field] = new_task;
+        var field2 = "last_modified";
+        obj[field2] = now;
         work_items.update(
             {
                 "_id" : work_item._id
             },
             {
-                $set : obj,
-                $set :
-                    {
-                        last_modified : now
-                    }
+                $set : obj
             }
         );
         Session.set("edit_task_key",null);

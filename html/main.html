@@ -57,11 +57,9 @@
                 <b>This Task's Group (click to remove)</b>
                 </br>
                 {{#if edit_task.group}}
-                    <span id="remove_task_group_from_task">
-                        <a href="javascript:void(0)">
-                            {{edit_task.group}}
-                        </a>
-                    </span>
+                    <a href="javascript:void(0)">
+                        <span id="remove_task_group_from_task">{{edit_task.group}}</span>
+                    </a>
                     </br>
                 {{/if}}
             </div>
