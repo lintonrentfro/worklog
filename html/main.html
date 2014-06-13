@@ -386,7 +386,6 @@
                     </li>
                 {{/if}}
             </ul>
-
             {{#if is_logged_in}}
                 <form class="navbar-form pull-right">
                     <button type="btn" class="btn" id="logout">logout as {{is_logged_in.username}}</button>
@@ -394,7 +393,7 @@
             {{else}}
                 <form class="navbar-form pull-right">
                     <div id="login_form">
-                        <div id="username_group" class="control-group {{#if error_form_login}}{{error_form_login}}{{/if}}">
+                        <div id="username_group" class="control-group">
                         <input type="text" class="span2" placeholder="username" id="username">
                         <input type="password" class="span2" placeholder="password" id="password">
                         <button type="btn" class="btn" id="login">login</button>

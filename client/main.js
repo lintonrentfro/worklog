@@ -60,19 +60,30 @@ Handlebars.registerHelper('key_value', function(context, options) {
 });
 
 /*
- Sweet Helper to Output "selected" in Forms if Matching Value Found
-*/
-Handlebars.registerHelper('selected', function(foo, bar) {
-  return foo == bar ? ' selected' : '';
-});
-
-
-/*
  Nav
  */
-Template.nav.error_form_login = function() {
-    if(Session.get("error_form_login")) {
-        return Session.get("error_form_login");
+Template.nav.day_started = function() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    var ymd = year + '-' + month + '-' + day;
+    var todays_log = daily_logs.findOne(
+        {
+            day : ymd
+        }
+    );
+    if(todays_log) {
+        // console.log("found today's log ...");
+        return 1;
+    } else {
+        // console.log("starting today's log ...");
+        // daily_logs.insert(
+        //     {
+        //         day : ymd
+        //     }
+        // );
+        return 0;
     };
 };
 Template.nav.events({
@@ -85,6 +96,26 @@ Template.nav.events({
         Session.set("user",this_user);
     },
     "click #page1" : function() {
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = now.getMonth() + 1;
+        var day = now.getDate();
+        var ymd = year + '-' + month + '-' + day;
+        var todays_log = daily_logs.findOne(
+            {
+                day : ymd
+            }
+        );
+        if(todays_log) {
+            console.log("found today's log ...");
+        } else {
+            console.log("starting today's log ...");
+            daily_logs.insert(
+                {
+                    day : ymd
+                }
+            );
+        };
         wl.set_route("page1");
     },
     "click #page2" : function() {

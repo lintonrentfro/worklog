@@ -62,3 +62,16 @@ task_groups.allow({
         return true;
     }
 });
+
+daily_logs = new Meteor.Collection("daily_logs");
+daily_logs.allow({
+    insert: function (userId, doc) {
+        return true;
+    },
+    update: function(userId, doc) {
+        return true;
+    },
+    remove: function(userId, doc) {
+        return true;
+    }
+});

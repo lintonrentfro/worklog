@@ -13,3 +13,6 @@ Meteor.publish("work_item_groups", function(){
 Meteor.publish("task_groups", function(){
 	return task_groups.find();
 });
+Meteor.publish("daily_logs", function(){
+	return daily_logs.find();
+});
