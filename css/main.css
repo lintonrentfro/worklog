@@ -1,3 +1,6 @@
 .gray {
-	background-color : #F8F8FF
+	background-color : #F8F8FF;
+}
+.task_notes {
+	font-size: 12px;
 }

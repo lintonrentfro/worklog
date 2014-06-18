@@ -96,29 +96,106 @@ Template.nav.events({
         Session.set("user",this_user);
     },
     "click #page1" : function() {
+        // date testing; this all works
+
+        // var now = new Date();
+        // var year = now.getFullYear();
+        // var month = now.getMonth() + 1;
+        // var day = now.getDate();
+        // var ymd = year + '-' + month + '-' + day;
+        // var todays_log = daily_logs.findOne(
+        //     {
+        //         day : ymd
+        //     }
+        // );
+        // if(todays_log) {
+        //     console.log("found today's log ...");
+        // } else {
+        //     console.log("starting today's log ...");
+        //     daily_logs.insert(
+        //         {
+        //             day : ymd
+        //         }
+        //     );
+        // };
+        wl.set_route("page1");
+    },
+    "click #page2" : function() {
+        // get today's Y:M:D
         var now = new Date();
         var year = now.getFullYear();
         var month = now.getMonth() + 1;
         var day = now.getDate();
         var ymd = year + '-' + month + '-' + day;
-        var todays_log = daily_logs.findOne(
-            {
-                day : ymd
-            }
-        );
-        if(todays_log) {
-            console.log("found today's log ...");
-        } else {
-            console.log("starting today's log ...");
-            daily_logs.insert(
-                {
-                    day : ymd
-                }
-            );
+
+        // all active work items
+        var all_work_items = work_items.find({active:"yes"}).fetch();
+
+        // function to sort by name
+        function sort_by_name(a,b) {
+            if (a.name < b.name)
+                return -1;
+            if (a.name > b.name)
+                return 1;
+            return 0;
         };
-        wl.set_route("page1");
-    },
-    "click #page2" : function() {
+
+        // sort all work items by name
+        all_work_items.sort(sort_by_name);
+
+        // create new log obj
+        var obj = {};
+        obj.day = ymd;
+        obj.last_modified = now;
+        obj.work_items = [];
+        for(var i=0; all_work_items.length>i; i++) {
+            obj.work_items[i] = all_work_items[i];
+        };
+        var fake_log_db_id = 123456789;
+
+        // add helper attribute for recently (7 days) changed work items
+        var now = new Date();
+        for(var i=0; obj.work_items.length>i; i++) {
+            var then = obj.work_items[i].last_modified;
+            var ms_difference = Math.abs(now.getTime() - then.getTime());
+            var day_difference = ms_difference / (1000 * 3600 * 24);
+            if(day_difference < wl.settings.days_tasks_are_considered_updated) {
+                var changes = "recent_changes";
+            } else {
+                var changes = "";
+            };
+            obj.work_items[i].recently_changed = "recent_changes";
+        };
+
+        // sort tasks by position
+        function sort_by_position(a,b) {
+            if (a.position < b.position)
+                return -1;
+            if (a.position > b.position)
+                return 1;
+            return 0;
+        };
+        for(var i=0; obj.work_items.length>i; i++) {
+            var these_tasks = obj.work_items[i].tasks;
+            // console.log(these_tasks);
+            obj.work_items[i].tasks.sort(sort_by_position);
+        };
+
+        // add the log obj db _id and the work_item array key to the tasks
+        // as a handlebars helper to make updating attributes easier
+        for(var i=0; obj.work_items.length>i; i++) {
+            var these_tasks = obj.work_items[i].tasks;
+            for(var ii=0; these_tasks.length>ii; ii++) {
+                obj.work_items[i].tasks[ii].parent_log_item_id = fake_log_db_id;
+                obj.work_items[i].tasks[ii].parent_work_item_key = i;
+            };
+        };
+
+        // view obj and save it
+        Session.set("todays_log",obj);
+        console.log(obj);
+
+        // route to page2
         wl.set_route("page2");
     },
     "click #page3" : function() {
@@ -284,7 +361,8 @@ Template.settings.events({
                         name : name,
                         last_modified : now,
                         tasks : [],
-                        groups : []
+                        groups : [],
+                        active : "yes"
                     }
                 );
                 Session.set("error_new_workitem_form",null);
@@ -299,7 +377,7 @@ Template.settings.events({
             var id = this.value._id;
             work_items.remove(
                 {
-                    "_id" : id
+                    _id : id
                 }
             );
         };
@@ -313,6 +391,25 @@ Template.settings.events({
             }
         );
         Session.set("edit_work_item",edit_work_item);
+    },
+    "click .toggle_workitem_active" : function() {
+        var id = this.value._id;
+        if(this.value.active == "no") {
+            var active_status = "yes";
+        } else {
+            var active_status = "no";
+        };
+        work_items.update(
+            {
+                _id : id
+            },
+            {
+                $set : 
+                    {
+                        active : active_status
+                    }
+            }
+        );
     },
     "click #close_edit_workitem" : function() {
         Session.set("edit_work_item",null);
@@ -521,8 +618,8 @@ Template.settings.events({
         };
     },
     "click #update_task" : function() {
-        var current_group = document.getElementById('remove_task_group_from_task').innerHTML;
-        // console.log(group);
+        var current_group_with_spaces = document.getElementById('remove_task_group_from_task').innerHTML;
+        var current_group = current_group_with_spaces.trim();
         var now = new Date();
         var task_key = Session.get("edit_task_key");
         var work_item = Session.get("edit_work_item");
@@ -607,3 +704,18 @@ Template.settings.events({
         };
     }
 });
+
+Template.page2.todays_log = function() {
+    if(Session.get("todays_log")) {
+        return Session.get("todays_log");
+    };
+};
+Template.page2.events({
+    "click .log_work_item" : function() {
+        console.log(this);
+    },
+    "click .log_task" : function() {
+        console.log(this);
+    }
+});
+

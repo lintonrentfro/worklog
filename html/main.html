@@ -13,7 +13,7 @@
             Log 1.
         {{/if}}
         {{#if page2}}
-            Log 2.
+            {{>page2}}
         {{/if}}
         {{#if page3}}
             {{>settings}}
@@ -30,13 +30,13 @@
 <template name="settings">
     {{#if edit_task}}
         <div class="row">
-                <div class="span10">
-                    <h3>Edit Task</h3>
-                </div>
-                <div class="span2">
-                    <span class="pull-right"><h2><a id="close_edit_task" href="javascript:void(0)">close</a></h2></span>
-                </div>
+            <div class="span10">
+                <h3>Edit Task</h3>
             </div>
+            <div class="span2">
+                <span class="pull-right"><h2><a id="close_edit_task" href="javascript:void(0)">close</a></h2></span>
+            </div>
+        </div>
         <div class="row">
             <div class="span12">
                 <form class="form">
@@ -259,6 +259,7 @@
                                     <th>last modified</th>
                                     <th>edit</th>
                                     <th>delete</th>
+                                    <th>active</th>
                                 </tr>
                             </thead>
                             {{#each key_value work_items}}
@@ -267,6 +268,7 @@
                                     <td>{{value.last_modified}}</td>
                                     <td><span class="edit_workitem"><a href="javascript:void(0)">edit</a></span></td>
                                     <td><span class="delete_workitem"><a href="javascript:void(0)">delete</a></span></td>
+                                    <td><span class="toggle_workitem_active"><a href="javascript:void(0)">{{value.active}}</a></span></td>
                                 </tr>
                             {{/each}}
                         </table>
@@ -400,6 +402,38 @@
                     </div>
                 </form>
             {{/if}}
+        </div>
+    </div>
+</template>
+
+<template name="page2">
+    <div class="row">
+        <div class="span12">
+            <h3>All Work Items and Tasks</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+        {{#if todays_log}}
+            {{#each key_value todays_log.work_items}}
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="log_work_item">
+                            {{value.name}}
+                        </td>
+                        {{#each key_value value.tasks}}
+                            <td class="log_work_item">
+                                {{value.name}}
+                                </br>
+                                <span class="task_notes">
+                                    {{value.notes}}
+                                </span>
+                            </td>
+                        {{/each}}
+                    </tr>
+                </table>
+            {{/each}}
+        {{/if}}
         </div>
     </div>
 </template>
