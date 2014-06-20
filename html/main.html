@@ -408,6 +408,24 @@
 
 <template name="page2">
     <div class="row">
+        <div class="span6">
+            <b>WI Groups</b></br>
+            {{#if wi_groups}}
+                {{#each key_value wi_groups}}
+                    <span class="filter_wi_group">{{value.name}}</span></br>
+                {{/each}}
+            {{/if}}
+        </div>
+        <div class="span6">
+            <b>Task Groups</b></br>
+            {{#if tsk_groups}}
+                {{#each key_value tsk_groups}}
+                    <span class="filter_tsk_group">{{value.name}}</span></br>
+                {{/each}}
+            {{/if}}
+        </div>
+    </div>
+    <div class="row">
         <div class="span12">
             <h3>All Work Items and Tasks</h3>
         </div>

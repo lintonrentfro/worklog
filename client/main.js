@@ -195,8 +195,14 @@ Template.nav.events({
         Session.set("todays_log",obj);
         console.log(obj);
 
+        // console.log(work_item_groups.find().fetch());
+
         // route to page2
         wl.set_route("page2");
+
+        // set wi and tsk filters to empty obj
+        var filters = {};
+        Session.set("view_filters",filters);
     },
     "click #page3" : function() {
         wl.set_route("page3");
@@ -710,12 +716,72 @@ Template.page2.todays_log = function() {
         return Session.get("todays_log");
     };
 };
+Template.page2.wi_groups = function() {
+    function sort_by_name(a,b) {
+      if (a.name < b.name)
+         return -1;
+      if (a.name > b.name)
+        return 1;
+      return 0;
+    };
+    var wi_groups = work_item_groups.find().fetch();
+    wi_groups.sort(sort_by_name);
+    return wi_groups;
+};
+Template.page2.tsk_groups = function() {
+    function sort_by_name(a,b) {
+      if (a.name < b.name)
+         return -1;
+      if (a.name > b.name)
+        return 1;
+      return 0;
+    };
+    var tsk_groups = task_groups.find().fetch();
+    tsk_groups.sort(sort_by_name);
+    return tsk_groups;
+};
 Template.page2.events({
     "click .log_work_item" : function() {
         console.log(this);
     },
     "click .log_task" : function() {
         console.log(this);
+    },
+    "click .filter_wi_group" : function() {
+        var wi_group = this.value.name;
+        var view_filters = Session.get("view_filters");
+        if(view_filters.group_filters) {
+            if(view_filters.group_filters.indexOf(wi_group) != -1) {
+                var element = view_filters.group_filters.indexOf(wi_group);
+                view_filters.group_filters.splice(element,1);
+            } else {
+                view_filters.group_filters.push(this.value.name);
+            };
+
+        } else {
+            view_filters.group_filters = [];
+            view_filters.group_filters.push(this.value.name);
+        };
+        Session.set("view_filters",view_filters);
+        console.log(Session.get("view_filters"));
+    },
+    "click .filter_tsk_group" : function() {
+        var task_group = this.value.name;
+        var view_filters = Session.get("view_filters");
+        if(view_filters.task_filters) {
+            if(view_filters.task_filters.indexOf(task_group) != -1) {
+                var element = view_filters.task_filters.indexOf(task_group);
+                view_filters.task_filters.splice(element,1);
+            } else {
+                view_filters.task_filters.push(this.value.name);
+            };
+
+        } else {
+            view_filters.task_filters = [];
+            view_filters.task_filters.push(this.value.name);
+        };
+        Session.set("view_filters",view_filters);
+        console.log(Session.get("view_filters"));
     }
 });
 
