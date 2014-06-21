@@ -427,14 +427,9 @@
     </div>
     <div class="row">
         <div class="span12">
-            <h3>All Work Items and Tasks</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span12">
         {{#if todays_log}}
             {{#each key_value todays_log.work_items}}
-                <table class="table table-bordered">
+                <table class="table table-bordered {{value.visible}}">
                     <tr>
                         <td class="log_work_item">
                             {{value.name}}

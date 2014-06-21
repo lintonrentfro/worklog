@@ -96,7 +96,7 @@ Template.nav.events({
         Session.set("user",this_user);
     },
     "click #page1" : function() {
-        // date testing; this all works
+        // date testing: this all works
 
         // var now = new Date();
         // var year = now.getFullYear();
@@ -203,6 +203,18 @@ Template.nav.events({
         // set wi and tsk filters to empty obj
         var filters = {};
         Session.set("view_filters",filters);
+
+        // create the initial wi_groups template obj
+        function sort_by_name(a,b) {
+            if (a.name < b.name)
+                return -1;
+            if (a.name > b.name)
+                return 1;
+            return 0;
+        };
+        var wi_groups = work_item_groups.find().fetch();
+        wi_groups.sort(sort_by_name);
+        Session.set("wi_groups",wi_groups);
     },
     "click #page3" : function() {
         wl.set_route("page3");
@@ -717,16 +729,9 @@ Template.page2.todays_log = function() {
     };
 };
 Template.page2.wi_groups = function() {
-    function sort_by_name(a,b) {
-      if (a.name < b.name)
-         return -1;
-      if (a.name > b.name)
-        return 1;
-      return 0;
-    };
-    var wi_groups = work_item_groups.find().fetch();
-    wi_groups.sort(sort_by_name);
-    return wi_groups;
+    if(Session.get("wi_groups")) {
+        return Session.get("wi_groups");
+    }
 };
 Template.page2.tsk_groups = function() {
     function sort_by_name(a,b) {
@@ -763,7 +768,39 @@ Template.page2.events({
             view_filters.group_filters.push(this.value.name);
         };
         Session.set("view_filters",view_filters);
+        
+        
+        // recalculate todays_log obj in Session
+        var log_obj = Session.get("todays_log");
+        for(var i=0; log_obj.work_items.length>i; i++) {
+            for(var ii=0; view_filters.group_filters.length>ii; ii++) {
+                if(log_obj.work_items[i].groups.indexOf(view_filters.group_filters[ii]) == -1 ) {
+                    log_obj.work_items[i].visible = "hidden";
+                } else {
+                    log_obj.work_items[i].visible = "";
+                    break;
+                };
+            };
+        };
+        Session.set("todays_log",log_obj);
+
+        // recalculate the wi_group template obj to include visual indicator of selected status
+        var wi_groups = Session.get("wi_groups");
+        for(var i=0; view_filters.group_filters.length>i; i++) {
+            for(var ii=0; wi_groups.length>ii; ii++) {
+                //
+                // PICK BACK UP HERE: ABOUT TO CYCLE THROUGH THE WI FILTER LIST TO ADD A VISUAL
+                // INDICATOR CLASS TO THE TEMPLATE WI GROUP OBJ
+                // THEN ADD A QUICK CSS CLASS AND TEST
+                //
+
+                // if()
+            };
+        };
+
+        // console output
         console.log(Session.get("view_filters"));
+        console.log(Session.get("todays_log"));
     },
     "click .filter_tsk_group" : function() {
         var task_group = this.value.name;
