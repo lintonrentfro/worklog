@@ -191,6 +191,12 @@ Template.nav.events({
             };
         };
 
+        // by default, all wi are hidden because no wi groups have been selected
+        for(var i=0; obj.work_items.length>i; i++) {
+            obj.work_items[i].visible = "hidden";
+        };
+        
+
         // view obj and save it
         Session.set("todays_log",obj);
         console.log(obj);
@@ -214,6 +220,9 @@ Template.nav.events({
         };
         var wi_groups = work_item_groups.find().fetch();
         wi_groups.sort(sort_by_name);
+        for(var i=0; wi_groups.length>i; i++) {
+            wi_groups[i].visual = "wi_group_not_selected";
+        };
         Session.set("wi_groups",wi_groups);
     },
     "click #page3" : function() {
@@ -769,7 +778,6 @@ Template.page2.events({
         };
         Session.set("view_filters",view_filters);
         
-        
         // recalculate todays_log obj in Session
         var log_obj = Session.get("todays_log");
         for(var i=0; log_obj.work_items.length>i; i++) {
@@ -782,25 +790,31 @@ Template.page2.events({
                 };
             };
         };
+        if(view_filters.group_filters.length == 0) {
+            for(var i=0; log_obj.work_items.length>i; i++) {
+                log_obj.work_items[i].visible = "hidden";
+            };
+        };
         Session.set("todays_log",log_obj);
 
         // recalculate the wi_group template obj to include visual indicator of selected status
         var wi_groups = Session.get("wi_groups");
-        for(var i=0; view_filters.group_filters.length>i; i++) {
-            for(var ii=0; wi_groups.length>ii; ii++) {
-                //
-                // PICK BACK UP HERE: ABOUT TO CYCLE THROUGH THE WI FILTER LIST TO ADD A VISUAL
-                // INDICATOR CLASS TO THE TEMPLATE WI GROUP OBJ
-                // THEN ADD A QUICK CSS CLASS AND TEST
-                //
-
-                // if()
+        for(var i=0; wi_groups.length>i; i++) {
+            for(var ii=0; view_filters.group_filters.length>ii; ii++) {
+                if(wi_groups[i].name != view_filters.group_filters[ii]) {
+                    wi_groups[i].visual = "wi_group_not_selected";
+                } else {
+                    wi_groups[i].visual = "wi_group_selected";
+                    break;
+                };
             };
         };
-
-        // console output
-        console.log(Session.get("view_filters"));
-        console.log(Session.get("todays_log"));
+        if(view_filters.group_filters.length == 0) {
+            for(var i=0; wi_groups.length>i; i++) {
+                wi_groups[i].visual = "wi_group_not_selected";
+            };
+        };
+        Session.set("wi_groups",wi_groups);
     },
     "click .filter_tsk_group" : function() {
         var task_group = this.value.name;

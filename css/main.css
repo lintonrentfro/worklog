@@ -4,3 +4,9 @@
 .task_notes {
 	font-size: 12px;
 }
+.wi_group_selected {
+	color: red;
+}
+.wi_group_not_selected {
+	color: grey;
+}
