@@ -418,9 +418,9 @@
         </div>
         <div class="span6">
             <b>Task Groups</b></br>
-            {{#if tsk_groups}}
-                {{#each key_value tsk_groups}}
-                    <span class="filter_tsk_group">{{value.name}}</span></br>
+            {{#if task_groups}}
+                {{#each key_value task_groups}}
+                    <span class="filter_task_group {{value.visual}}">{{value.name}}</span></br>
                 {{/each}}
             {{/if}}
         </div>
@@ -435,7 +435,7 @@
                             {{value.name}}
                         </td>
                         {{#each key_value value.tasks}}
-                            <td class="log_work_item">
+                            <td class="work_item_task {{value.visible}}">
                                 {{value.name}}
                                 </br>
                                 <span class="task_notes">

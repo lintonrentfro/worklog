@@ -196,12 +196,16 @@ Template.nav.events({
             obj.work_items[i].visible = "hidden";
         };
         
+        // by default, all tasks are hidden because no tasks groups have been selected
+        for(var i=0; obj.work_items.length>i; i++) {
+            for(var ii=0; obj.work_items[i].tasks.length>ii; ii++) {
+                obj.work_items[i].tasks[ii].visible = "hidden";
+            };
+        };
 
         // view obj and save it
         Session.set("todays_log",obj);
         console.log(obj);
-
-        // console.log(work_item_groups.find().fetch());
 
         // route to page2
         wl.set_route("page2");
@@ -224,6 +228,21 @@ Template.nav.events({
             wi_groups[i].visual = "wi_group_not_selected";
         };
         Session.set("wi_groups",wi_groups);
+
+        // create the initial task_groups template obj
+        function sort_by_name(a,b) {
+            if (a.name < b.name)
+                return -1;
+            if (a.name > b.name)
+                return 1;
+            return 0;
+        };
+        var tsk_groups = task_groups.find().fetch();
+        tsk_groups.sort(sort_by_name);
+        for(var i=0; tsk_groups.length>i; i++) {
+            tsk_groups[i].visual = "task_group_not_selected";
+        };
+        Session.set("task_groups",tsk_groups);
     },
     "click #page3" : function() {
         wl.set_route("page3");
@@ -521,22 +540,20 @@ Template.settings.events({
             }
         );
         var task_key = Session.get("edit_task_key");
-        if(work_item.tasks[task_key].group != new_group) {
-            var now = new Date();
-            var obj = {};
-            var field1 = "tasks." + task_key + ".group";
-            obj[field1] = new_group;
-            var field2 = "last_modified";
-            obj[field2] = now;
-            work_items.update(
-                {
-                    _id : id
-                },
-                {
-                    $set : obj
-                }
-            );
-        };
+        var now = new Date();
+        var obj = {};
+        var field1 = "tasks." + task_key + ".group";
+        obj[field1] = new_group;
+        var field2 = "last_modified";
+        obj[field2] = now;
+        work_items.update(
+            {
+                _id : id
+            },
+            {
+                $set : obj
+            }
+        );
         var new_edit_task = {};
         new_edit_task.name = Session.get("edit_task").name;
         new_edit_task.position = Session.get("edit_task").position;
@@ -740,19 +757,12 @@ Template.page2.todays_log = function() {
 Template.page2.wi_groups = function() {
     if(Session.get("wi_groups")) {
         return Session.get("wi_groups");
-    }
-};
-Template.page2.tsk_groups = function() {
-    function sort_by_name(a,b) {
-      if (a.name < b.name)
-         return -1;
-      if (a.name > b.name)
-        return 1;
-      return 0;
     };
-    var tsk_groups = task_groups.find().fetch();
-    tsk_groups.sort(sort_by_name);
-    return tsk_groups;
+};
+Template.page2.task_groups = function() {
+    if(Session.get("task_groups")) {
+        return Session.get("task_groups");
+    };
 };
 Template.page2.events({
     "click .log_work_item" : function() {
@@ -816,7 +826,7 @@ Template.page2.events({
         };
         Session.set("wi_groups",wi_groups);
     },
-    "click .filter_tsk_group" : function() {
+    "click .filter_task_group" : function() {
         var task_group = this.value.name;
         var view_filters = Session.get("view_filters");
         if(view_filters.task_filters) {
@@ -832,7 +842,48 @@ Template.page2.events({
             view_filters.task_filters.push(this.value.name);
         };
         Session.set("view_filters",view_filters);
-        console.log(Session.get("view_filters"));
+
+
+        // recalculate todays_log obj in Session
+        var log_obj = Session.get("todays_log");
+        for(var i=0; log_obj.work_items.length>i; i++) {
+            for(var ii=0; log_obj.work_items[i].tasks.length>ii; ii++) {
+                for(var iii=0; view_filters.task_filters.length>iii; iii++) {
+                    if(view_filters.task_filters[iii] == log_obj.work_items[i].tasks[ii].group) {
+                        log_obj.work_items[i].tasks[ii].visible = "";
+                        break;
+                    } else {
+                        log_obj.work_items[i].tasks[ii].visible = "hidden";
+                    };
+                };
+            };
+        };
+        if(view_filters.task_filters.length == 0) {
+            for(var i=0; log_obj.work_items.length>i; i++) {
+                for(var ii=0; log_obj.work_items[i].tasks.length>ii; ii++) {
+                    log_obj.work_items[i].tasks[ii].visible = "hidden";
+                };
+            };
+        };
+        Session.set("todays_log",log_obj);
+
+        // recalculate the task_group template obj to include visual indicator of selected status
+        var tsk_groups = Session.get("task_groups");
+        for(var i=0; tsk_groups.length>i; i++) {
+            for(var ii=0; view_filters.task_filters.length>ii; ii++) {
+                if(tsk_groups[i].name != view_filters.task_filters[ii]) {
+                    tsk_groups[i].visual = "task_group_not_selected";
+                } else {
+                    tsk_groups[i].visual = "task_group_selected";
+                    break;
+                };
+            };
+        };
+        if(view_filters.task_filters.length == 0) {
+            for(var i=0; tsk_groups.length>i; i++) {
+                tsk_groups[i].visual = "task_group_not_selected";
+            };
+        };
+        Session.set("task_groups",tsk_groups);
     }
 });
-

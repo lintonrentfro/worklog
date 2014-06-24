@@ -6,7 +6,20 @@
 }
 .wi_group_selected {
 	color: red;
+	cursor: pointer;
 }
 .wi_group_not_selected {
 	color: grey;
+	cursor: pointer;
+}
+.filter_task_group {
+	cursor: pointer;
+}
+.task_group_selected {
+	color: red;
+	cursor: pointer;
+}
+.task_group_not_selected {
+	color: grey;
+	cursor: pointer;
 }
