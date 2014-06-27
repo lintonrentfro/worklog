@@ -531,8 +531,14 @@ Template.settings.events({
     },
     "click .add_task_group_to_task" : function() {
         var new_group = this.value.name;
+        console.log("var new_group = " + new_group);
         var id = Session.get("edit_work_item")._id;
+
+        // something wrong here
+        // we've got new_group and group defined the same way
         var group = this.value.name;
+
+        // update the work_item "last_modified" and "group" attributes
         var now = new Date();
         var work_item = work_items.findOne(
             {
@@ -540,6 +546,7 @@ Template.settings.events({
             }
         );
         var task_key = Session.get("edit_task_key");
+        console.log("var task_key = " + task_key);
         var now = new Date();
         var obj = {};
         var field1 = "tasks." + task_key + ".group";
@@ -554,6 +561,7 @@ Template.settings.events({
                 $set : obj
             }
         );
+
         var new_edit_task = {};
         new_edit_task.name = Session.get("edit_task").name;
         new_edit_task.position = Session.get("edit_task").position;
@@ -626,13 +634,19 @@ Template.settings.events({
         var edit_task = {
             name : this.value.name,
             position : this.value.position,
-            task_group : this.value.task_group,
             notes : this.value.notes,
             deadline : this.value.deadline,
             group : this.value.group
         };
-        Session.set("edit_task_key",this.key);
         Session.set("edit_task",edit_task);
+
+        // save the array key for this task as stored in mongo
+        var tasks = Session.get("edit_work_item").tasks;
+        for(var i=0; tasks.length>i; i++) {
+            if(tasks[i].name == edit_task.name && tasks[i].position == edit_task.position && tasks[i].group == edit_task.group) {
+                Session.set("edit_task_key", i);
+            };
+        };
     },
     "click #close_edit_task" : function() {
         Session.set("edit_task",null);
