@@ -91,11 +91,18 @@
             <div class="row">
                 <div class="span12">
                     <form class="form">
-                        <label>Name</label>
-                        <input type="text" value="{{edit_work_item.name}}" id="name">
-                        </br>
-                        <button type="btn" class="btn" id="update_work_item_name">update work item name</button>
+                        <div class="input-append">
+                            <input class="" id="name" type="text" value="{{edit_work_item.name}}">
+                            <button class="btn" type="button" id="update_work_item_name">update work item name</button>
+                        </div>
                     </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    Active: {{edit_work_item.active}}
+                    </br>
+                    Make this a button that toggles the "active" attribute.
                 </div>
             </div>
             <div class="row">
@@ -408,7 +415,7 @@
 
 <template name="page2">
     <div class="row">
-        <div class="span6">
+        <div class="span4">
             <b>WI Groups</b></br>
             <span id="toggle_all_wi_groups" class="pointer">*Toggle All*</span></br>
             {{#if wi_groups}}
@@ -417,7 +424,12 @@
                 {{/each}}
             {{/if}}
         </div>
-        <div class="span6">
+        <div class="span4">
+            <b>this log's date</b></br>
+            change the date form and button</br>
+            start next day button</br>
+        </div>
+        <div class="span4">
             <b>Task Groups</b></br>
             <span id="toggle_all_task_groups" class="pointer">*Toggle All*</span></br>
             {{#if task_groups}}

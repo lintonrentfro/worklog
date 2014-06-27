@@ -429,7 +429,6 @@ Template.settings.events({
         };
     },
     "click .edit_workitem" : function() {
-        console.log(this);
         var id = this.value._id;
         var edit_work_item = work_items.findOne(
             {
@@ -437,6 +436,7 @@ Template.settings.events({
             }
         );
         Session.set("edit_work_item",edit_work_item);
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
     "click .toggle_workitem_active" : function() {
         var id = this.value._id;
@@ -647,6 +647,8 @@ Template.settings.events({
                 Session.set("edit_task_key", i);
             };
         };
+
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
     "click #close_edit_task" : function() {
         Session.set("edit_task",null);
