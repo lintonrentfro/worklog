@@ -843,6 +843,121 @@ Template.page2.events({
         };
         Session.set("view_filters",view_filters);
 
+        // recalculate todays_log obj in Session
+        var log_obj = Session.get("todays_log");
+        for(var i=0; log_obj.work_items.length>i; i++) {
+            for(var ii=0; log_obj.work_items[i].tasks.length>ii; ii++) {
+                for(var iii=0; view_filters.task_filters.length>iii; iii++) {
+                    if(view_filters.task_filters[iii] == log_obj.work_items[i].tasks[ii].group) {
+                        log_obj.work_items[i].tasks[ii].visible = "";
+                        break;
+                    } else {
+                        log_obj.work_items[i].tasks[ii].visible = "hidden";
+                    };
+                };
+            };
+        };
+        if(view_filters.task_filters.length == 0) {
+            for(var i=0; log_obj.work_items.length>i; i++) {
+                for(var ii=0; log_obj.work_items[i].tasks.length>ii; ii++) {
+                    log_obj.work_items[i].tasks[ii].visible = "hidden";
+                };
+            };
+        };
+        Session.set("todays_log",log_obj);
+
+        // recalculate the task_group template obj to include visual indicator of selected status
+        var tsk_groups = Session.get("task_groups");
+        for(var i=0; tsk_groups.length>i; i++) {
+            for(var ii=0; view_filters.task_filters.length>ii; ii++) {
+                if(tsk_groups[i].name != view_filters.task_filters[ii]) {
+                    tsk_groups[i].visual = "task_group_not_selected";
+                } else {
+                    tsk_groups[i].visual = "task_group_selected";
+                    break;
+                };
+            };
+        };
+        if(view_filters.task_filters.length == 0) {
+            for(var i=0; tsk_groups.length>i; i++) {
+                tsk_groups[i].visual = "task_group_not_selected";
+            };
+        };
+        Session.set("task_groups",tsk_groups);
+    },
+    "click #toggle_all_wi_groups" : function() {
+        var view_filters = Session.get("view_filters");
+        var all_wi_group_filters = Session.get("wi_groups");
+        
+        // if there are no group filters set, add an empty array for them
+        // and add all the available wi group filters to it
+        if(!view_filters.group_filters || view_filters.group_filters.length == 0) {
+            view_filters.group_filters = [];
+            for(var i=0; all_wi_group_filters.length>i; i++) {
+                view_filters.group_filters.push(all_wi_group_filters[i].name);
+            };
+        } else {
+            // if there were any active group filters, remove them
+            view_filters.group_filters = [];
+        };
+        
+        Session.set("view_filters", view_filters);
+
+        // recalculate todays_log obj in Session
+        var log_obj = Session.get("todays_log");
+        for(var i=0; log_obj.work_items.length>i; i++) {
+            for(var ii=0; view_filters.group_filters.length>ii; ii++) {
+                if(log_obj.work_items[i].groups.indexOf(view_filters.group_filters[ii]) == -1 ) {
+                    log_obj.work_items[i].visible = "hidden";
+                } else {
+                    log_obj.work_items[i].visible = "";
+                    break;
+                };
+            };
+        };
+        if(view_filters.group_filters.length == 0) {
+            for(var i=0; log_obj.work_items.length>i; i++) {
+                log_obj.work_items[i].visible = "hidden";
+            };
+        };
+        Session.set("todays_log",log_obj);
+
+        // recalculate the wi_group template obj to include visual indicator of selected status
+        var wi_groups = Session.get("wi_groups");
+        for(var i=0; wi_groups.length>i; i++) {
+            for(var ii=0; view_filters.group_filters.length>ii; ii++) {
+                if(wi_groups[i].name != view_filters.group_filters[ii]) {
+                    wi_groups[i].visual = "wi_group_not_selected";
+                } else {
+                    wi_groups[i].visual = "wi_group_selected";
+                    break;
+                };
+            };
+        };
+        if(view_filters.group_filters.length == 0) {
+            for(var i=0; wi_groups.length>i; i++) {
+                wi_groups[i].visual = "wi_group_not_selected";
+            };
+        };
+        Session.set("wi_groups",wi_groups);
+    },
+    "click #toggle_all_task_groups" : function() {
+        var view_filters = Session.get("view_filters");
+        var all_task_group_filters = Session.get("task_groups");
+        
+        // if there are no task filters set, add an empty array for them
+        // and add all the available task group filters to it
+        if(!view_filters.task_filters || view_filters.task_filters.length == 0) {
+            view_filters.task_filters = [];
+            for(var i=0; all_task_group_filters.length>i; i++) {
+                view_filters.task_filters.push(all_task_group_filters[i].name);
+            };
+        } else {
+            // if there were any active group filters, remove them
+            view_filters.task_filters = [];
+        };
+        
+        Session.set("view_filters", view_filters);
 
         // recalculate todays_log obj in Session
         var log_obj = Session.get("todays_log");

@@ -410,6 +410,7 @@
     <div class="row">
         <div class="span6">
             <b>WI Groups</b></br>
+            <span id="toggle_all_wi_groups" class="pointer">toggle all</span></br>
             {{#if wi_groups}}
                 {{#each key_value wi_groups}}
                     <span class="filter_wi_group {{value.visual}}">{{value.name}}</span></br>
@@ -418,6 +419,7 @@
         </div>
         <div class="span6">
             <b>Task Groups</b></br>
+            <span id="toggle_all_task_groups" class="pointer">toggle all</span></br>
             {{#if task_groups}}
                 {{#each key_value task_groups}}
                     <span class="filter_task_group {{value.visual}}">{{value.name}}</span></br>
