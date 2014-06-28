@@ -5,7 +5,7 @@
 	font-size: 12px;
 }
 .wi_group_selected {
-	color: red;
+	color: green;
 	cursor: pointer;
 }
 .wi_group_not_selected {
@@ -16,7 +16,7 @@
 	cursor: pointer;
 }
 .task_group_selected {
-	color: red;
+	color: green;
 	cursor: pointer;
 }
 .task_group_not_selected {

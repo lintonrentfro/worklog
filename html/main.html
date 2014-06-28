@@ -461,7 +461,7 @@
                 <table class="table table-bordered {{value.visible}}">
                     <tr>
                         <td class="log_work_item">
-                            {{value.name}}
+                            {{#if value.recently_changed}}*{{/if}}{{value.name}}
                         </td>
                         {{#each key_value value.tasks}}
                             <td class="work_item_task {{value.visible}}">

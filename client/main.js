@@ -153,18 +153,19 @@ Template.nav.events({
         };
         var fake_log_db_id = 123456789;
 
-        // add helper attribute for recently (7 days) changed work items
+        // add helper attribute for recently changed work items
+        // cutoff for what counts as recently changed in manually defined here as 3 days
         var now = new Date();
         for(var i=0; obj.work_items.length>i; i++) {
             var then = obj.work_items[i].last_modified;
             var ms_difference = Math.abs(now.getTime() - then.getTime());
             var day_difference = ms_difference / (1000 * 3600 * 24);
-            if(day_difference < wl.settings.days_tasks_are_considered_updated) {
+            if(day_difference < 3) {
                 var changes = "recent_changes";
             } else {
-                var changes = "";
+                var changes = null;
             };
-            obj.work_items[i].recently_changed = "recent_changes";
+            obj.work_items[i].recently_changed = changes;
         };
 
         // sort tasks by position
@@ -205,7 +206,6 @@ Template.nav.events({
 
         // view obj and save it
         Session.set("todays_log",obj);
-        console.log(obj);
 
         // route to page2
         wl.set_route("page2");
@@ -243,6 +243,8 @@ Template.nav.events({
             tsk_groups[i].visual = "task_group_not_selected";
         };
         Session.set("task_groups",tsk_groups);
+
+        console.log(obj);
     },
     "click #page3" : function() {
         wl.set_route("page3");
