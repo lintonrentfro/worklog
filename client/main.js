@@ -170,11 +170,7 @@ Template.nav.events({
 
         // sort tasks by position
         function sort_by_position(a,b) {
-            if (a.position < b.position)
-                return -1;
-            if (a.position > b.position)
-                return 1;
-            return 0;
+            return a.position - b.position;
         };
         for(var i=0; obj.work_items.length>i; i++) {
             var these_tasks = obj.work_items[i].tasks;
