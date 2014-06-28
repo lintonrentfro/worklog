@@ -424,19 +424,34 @@
                 {{/each}}
             {{/if}}
         </div>
-        <div class="span4">
-            <b>this log's date</b></br>
-            change the date form and button</br>
-            start next day button</br>
+        <div class="span4" align="center">
+            {{#if todays_log}}
+                <b>
+                    <span style="font-size:24pt">
+                        {{todays_log.day}}
+                    </span>
+                </b>
+                <p>
+                    <div class="input-append">
+                        <input id="appendedInputButton" class="span3" type="text" placeholder="ex: '2014-7-22'">
+                        <button id="go_to_day" class="btn" type="button">Go!</button>
+                    </div>
+                </p>
+            {{/if}}
         </div>
-        <div class="span4">
-            <b>Task Groups</b></br>
+        <div class="span4" align="right">
+            <b align="right">Task Groups</b></br>
             <span id="toggle_all_task_groups" class="pointer">*Toggle All*</span></br>
             {{#if task_groups}}
                 {{#each key_value task_groups}}
                     <span class="filter_task_group {{value.visual}}">{{value.name}}</span></br>
                 {{/each}}
             {{/if}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <hr>
         </div>
     </div>
     <div class="row">
