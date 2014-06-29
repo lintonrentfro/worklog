@@ -66,6 +66,9 @@ Template.nav.day_started = function() {
     var now = new Date();
     var year = now.getFullYear();
     var month = now.getMonth() + 1;
+    if(month < 10) {
+        month = "0" + month;
+    };
     var day = now.getDate();
     var ymd = year + '-' + month + '-' + day;
     var todays_log = daily_logs.findOne(
@@ -101,6 +104,9 @@ Template.nav.events({
         // var now = new Date();
         // var year = now.getFullYear();
         // var month = now.getMonth() + 1;
+        // if(month < 10) {
+        //     month = "0" + month.toString();
+        // };
         // var day = now.getDate();
         // var ymd = year + '-' + month + '-' + day;
         // var todays_log = daily_logs.findOne(
@@ -125,6 +131,9 @@ Template.nav.events({
         var now = new Date();
         var year = now.getFullYear();
         var month = now.getMonth() + 1;
+        if(month < 10) {
+            month = "0" + month.toString();
+        };
         var day = now.getDate();
         var ymd = year + '-' + month + '-' + day;
 
@@ -1016,3 +1025,7 @@ Template.page2.events({
         Session.set("task_groups",tsk_groups);
     }
 });
+
+// refresh the visual indicators of "lateness" every two seconds when user is viewing a live log
+setInterval(wl.refresh_live_log, 2000);
+

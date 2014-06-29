@@ -23,3 +23,9 @@
 	color: grey;
 	cursor: pointer;
 }
+.task_late {
+	background-color : red;
+}
+.task_final_hour {
+	background-color : yellow;
+}

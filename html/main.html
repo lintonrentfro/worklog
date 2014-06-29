@@ -464,11 +464,11 @@
                             {{#if value.recently_changed}}*{{/if}}{{value.name}}
                         </td>
                         {{#each key_value value.tasks}}
-                            <td class="work_item_task {{value.visible}}">
+                            <td class="work_item_task {{value.visible}} {{value.lateness}}">
                                 {{value.name}}
                                 </br>
                                 <span class="task_notes">
-                                    {{value.notes}}
+                                    {{value.deadline}}
                                 </span>
                             </td>
                         {{/each}}
