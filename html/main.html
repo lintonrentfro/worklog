@@ -12,8 +12,8 @@
         {{#if page1}}
             Log 1.
         {{/if}}
-        {{#if page2}}
-            {{>page2}}
+        {{#if daily_log}}
+            {{>daily_log}}
         {{/if}}
         {{#if page3}}
             {{>settings}}
@@ -385,8 +385,8 @@
                     <li id="page1" class="{{#if page1}}{{page1}}{{/if}}">
                         <a href="javascript:void(0)">Page1</a>
                     </li>
-                    <li id="page2" class="{{#if page2}}{{page2}}{{/if}}">
-                        <a href="javascript:void(0)">Page2</a>
+                    <li id="daily_log" class="{{#if daily_log}}{{daily_log}}{{/if}}">
+                        <a href="javascript:void(0)">daily log</a>
                     </li>
                 {{/if}}
                 {{#if is_admin}}
@@ -413,7 +413,7 @@
     </div>
 </template>
 
-<template name="page2">
+<template name="daily_log">
     <div class="row">
         <div class="span4">
             <b>WI Groups</b></br>

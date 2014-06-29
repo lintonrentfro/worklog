@@ -21,9 +21,9 @@ Handlebars.registerHelper("page1", function() {
         return Session.get("page1");
     };
 });
-Handlebars.registerHelper("page2", function() {
-    if(Session.get("page2")) {
-        return Session.get("page2");
+Handlebars.registerHelper("daily_log", function() {
+    if(Session.get("daily_log")) {
+        return Session.get("daily_log");
     };
 });
 Handlebars.registerHelper("page3", function() {
@@ -126,8 +126,9 @@ Template.nav.events({
         // };
         wl.set_route("page1");
     },
-    "click #page2" : function() {
-        // get today's Y:M:D
+    "click #daily_log" : function() {
+
+        // calculate today's Y:M:D
         var now = new Date();
         var year = now.getFullYear();
         var month = now.getMonth() + 1;
@@ -137,119 +138,21 @@ Template.nav.events({
         var day = now.getDate();
         var ymd = year + '-' + month + '-' + day;
 
-        // all active work items
-        var all_work_items = work_items.find({active:"yes"}).fetch();
+        // get today's log
+        var log_for_today = daily_logs.findOne(
+            {
+                day : ymd
+            }
+        );
 
-        // function to sort by name
-        function sort_by_name(a,b) {
-            if (a.name < b.name)
-                return -1;
-            if (a.name > b.name)
-                return 1;
-            return 0;
+        // if today's log already exists use as by default
+        if(!log_for_today) {
+            console.log("starting new daily log for " + ymd);
+            wl.start_new_daily_log(ymd);
+        } else {
+            console.log("loading existing daily log for " + ymd);
+            wl.load_daily_log(ymd);
         };
-
-        // sort all work items by name
-        all_work_items.sort(sort_by_name);
-
-        // create new log obj
-        var obj = {};
-        obj.day = ymd;
-        obj.last_modified = now;
-        obj.work_items = [];
-        for(var i=0; all_work_items.length>i; i++) {
-            obj.work_items[i] = all_work_items[i];
-        };
-        var fake_log_db_id = 123456789;
-
-        // add helper attribute for recently changed work items
-        // cutoff for what counts as recently changed in manually defined here as 3 days
-        var now = new Date();
-        for(var i=0; obj.work_items.length>i; i++) {
-            var then = obj.work_items[i].last_modified;
-            var ms_difference = Math.abs(now.getTime() - then.getTime());
-            var day_difference = ms_difference / (1000 * 3600 * 24);
-            if(day_difference < 3) {
-                var changes = "recent_changes";
-            } else {
-                var changes = null;
-            };
-            obj.work_items[i].recently_changed = changes;
-        };
-
-        // sort tasks by position
-        function sort_by_position(a,b) {
-            return a.position - b.position;
-        };
-        for(var i=0; obj.work_items.length>i; i++) {
-            var these_tasks = obj.work_items[i].tasks;
-            // console.log(these_tasks);
-            obj.work_items[i].tasks.sort(sort_by_position);
-        };
-
-        // add the log obj db _id and the work_item array key to the tasks
-        // as a handlebars helper to make updating attributes easier
-        for(var i=0; obj.work_items.length>i; i++) {
-            var these_tasks = obj.work_items[i].tasks;
-            for(var ii=0; these_tasks.length>ii; ii++) {
-                obj.work_items[i].tasks[ii].parent_log_item_id = fake_log_db_id;
-                obj.work_items[i].tasks[ii].parent_work_item_key = i;
-            };
-        };
-
-        // by default, all wi are hidden because no wi groups have been selected
-        for(var i=0; obj.work_items.length>i; i++) {
-            obj.work_items[i].visible = "hidden";
-        };
-        
-        // by default, all tasks are hidden because no tasks groups have been selected
-        for(var i=0; obj.work_items.length>i; i++) {
-            for(var ii=0; obj.work_items[i].tasks.length>ii; ii++) {
-                obj.work_items[i].tasks[ii].visible = "hidden";
-            };
-        };
-
-        // view obj and save it
-        Session.set("todays_log",obj);
-
-        // route to page2
-        wl.set_route("page2");
-
-        // set wi and tsk filters to empty obj
-        var filters = {};
-        Session.set("view_filters",filters);
-
-        // create the initial wi_groups template obj
-        function sort_by_name(a,b) {
-            if (a.name < b.name)
-                return -1;
-            if (a.name > b.name)
-                return 1;
-            return 0;
-        };
-        var wi_groups = work_item_groups.find().fetch();
-        wi_groups.sort(sort_by_name);
-        for(var i=0; wi_groups.length>i; i++) {
-            wi_groups[i].visual = "wi_group_not_selected";
-        };
-        Session.set("wi_groups",wi_groups);
-
-        // create the initial task_groups template obj
-        function sort_by_name(a,b) {
-            if (a.name < b.name)
-                return -1;
-            if (a.name > b.name)
-                return 1;
-            return 0;
-        };
-        var tsk_groups = task_groups.find().fetch();
-        tsk_groups.sort(sort_by_name);
-        for(var i=0; tsk_groups.length>i; i++) {
-            tsk_groups[i].visual = "task_group_not_selected";
-        };
-        Session.set("task_groups",tsk_groups);
-
-        console.log(obj);
     },
     "click #page3" : function() {
         wl.set_route("page3");
@@ -772,22 +675,22 @@ Template.settings.events({
     }
 });
 
-Template.page2.todays_log = function() {
+Template.daily_log.todays_log = function() {
     if(Session.get("todays_log")) {
         return Session.get("todays_log");
     };
 };
-Template.page2.wi_groups = function() {
+Template.daily_log.wi_groups = function() {
     if(Session.get("wi_groups")) {
         return Session.get("wi_groups");
     };
 };
-Template.page2.task_groups = function() {
+Template.daily_log.task_groups = function() {
     if(Session.get("task_groups")) {
         return Session.get("task_groups");
     };
 };
-Template.page2.events({
+Template.daily_log.events({
     "click .log_work_item" : function() {
         console.log(this);
     },
