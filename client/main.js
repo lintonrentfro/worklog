@@ -146,12 +146,17 @@ Template.nav.events({
         );
 
         // if today's log already exists use as by default
+        // if it doesn't already exist, don't load any log
         if(!log_for_today) {
-            console.log("starting new daily log for " + ymd);
-            wl.start_new_daily_log(ymd);
+            console.log("there's no log for " + ymd);
+            wl.set_route("daily_log");
+            // wl.start_new_daily_log(ymd);
+
         } else {
-            console.log("loading existing daily log for " + ymd);
-            wl.load_daily_log(ymd);
+            // console.log("loading existing daily log for " + ymd);
+            // wl.load_daily_log(ymd);
+            console.log("deleting today's log");
+
         };
     },
     "click #page3" : function() {
@@ -926,6 +931,35 @@ Template.daily_log.events({
             };
         };
         Session.set("task_groups",tsk_groups);
+    },
+    "click #start_todays_log" : function() {
+        // calculate today's Y:M:D
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = now.getMonth() + 1;
+        if(month < 10) {
+            month = "0" + month.toString();
+        };
+        var day = now.getDate();
+        var ymd = year + '-' + month + '-' + day;
+
+        // get today's log
+        var log_for_today = daily_logs.findOne(
+            {
+                day : ymd
+            }
+        );
+
+        // make sure today's log does not already exist
+        if(!log_for_today) {
+            console.log("there's no log for " + ymd);
+            console.log("creating one ...");
+            wl.start_new_daily_log(ymd);
+        } else {
+            console.log("today's log found (someone may have just made it)");
+            console.log("loading existing daily log for " + ymd);
+            wl.load_daily_log(ymd);
+        };
     }
 });
 

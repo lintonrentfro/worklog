@@ -416,12 +416,14 @@
 <template name="daily_log">
     <div class="row">
         <div class="span4">
-            <b>WI Groups</b></br>
-            <span id="toggle_all_wi_groups" class="pointer">*Toggle All*</span></br>
-            {{#if wi_groups}}
-                {{#each key_value wi_groups}}
-                    <span class="filter_wi_group {{value.visual}}">{{value.name}}</span></br>
-                {{/each}}
+            {{#if todays_log}}
+                <b>WI Groups</b></br>
+                <span id="toggle_all_wi_groups" class="pointer">*Toggle All*</span></br>
+                {{#if wi_groups}}
+                    {{#each key_value wi_groups}}
+                        <span class="filter_wi_group {{value.visual}}">{{value.name}}</span></br>
+                    {{/each}}
+                {{/if}}
             {{/if}}
         </div>
         <div class="span4" align="center">
@@ -437,21 +439,36 @@
                         <button id="go_to_day" class="btn" type="button">Go!</button>
                     </div>
                 </p>
+            {{else}}
+                <p>
+                    <b>
+                        <span style="font-size:20pt">
+                            No Log For Today
+                        </span>
+                    </b>
+                </p>
+                <p>
+                    <button id="start_todays_log" class="btn" type="button">Start Today's Log</button>
+                </p>
             {{/if}}
         </div>
         <div class="span4" align="right">
-            <b align="right">Task Groups</b></br>
-            <span id="toggle_all_task_groups" class="pointer">*Toggle All*</span></br>
-            {{#if task_groups}}
-                {{#each key_value task_groups}}
-                    <span class="filter_task_group {{value.visual}}">{{value.name}}</span></br>
-                {{/each}}
+            {{#if todays_log}}
+                <b align="right">Task Groups</b></br>
+                <span id="toggle_all_task_groups" class="pointer">*Toggle All*</span></br>
+                {{#if task_groups}}
+                    {{#each key_value task_groups}}
+                        <span class="filter_task_group {{value.visual}}">{{value.name}}</span></br>
+                    {{/each}}
+                {{/if}}
             {{/if}}
         </div>
     </div>
     <div class="row">
         <div class="span12">
-            <hr>
+            {{#if todays_log}}
+                <hr>
+            {{/if}}
         </div>
     </div>
     <div class="row">
