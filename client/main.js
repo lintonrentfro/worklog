@@ -136,6 +136,9 @@ Template.nav.events({
             month = "0" + month.toString();
         };
         var day = now.getDate();
+        if(day < 10) {
+            day = "0" + day.toString();
+        };
         var ymd = year + '-' + month + '-' + day;
 
         // get today's log
@@ -154,9 +157,9 @@ Template.nav.events({
 
         } else {
             // console.log("loading existing daily log for " + ymd);
-            // wl.load_daily_log(ymd);
-            console.log("deleting today's log");
-
+            wl.load_daily_log(ymd);
+            // console.log("deleting today's log");
+            // wl.set_route("daily_log");
         };
     },
     "click #page3" : function() {
@@ -695,6 +698,9 @@ Template.daily_log.task_groups = function() {
         return Session.get("task_groups");
     };
 };
+Template.daily_log.rendered = function() {
+   $('[rel=tooltip]').tooltip();
+};
 Template.daily_log.events({
     "click .log_work_item" : function() {
         console.log(this);
@@ -941,6 +947,9 @@ Template.daily_log.events({
             month = "0" + month.toString();
         };
         var day = now.getDate();
+        if(day < 10) {
+            day = "0" + day.toString();
+        };
         var ymd = year + '-' + month + '-' + day;
 
         // get today's log
@@ -959,6 +968,24 @@ Template.daily_log.events({
             console.log("today's log found (someone may have just made it)");
             console.log("loading existing daily log for " + ymd);
             wl.load_daily_log(ymd);
+        };
+    },
+    "click #load_log_with_date" : function() {
+        var requested_date = document.getElementById('log_date').value;
+
+        // get this log
+        var log_requested = daily_logs.findOne(
+            {
+                day : requested_date
+            }
+        );
+
+        // if this log exists, load it
+        if(log_requested) {
+            console.log("found existing log and loading it for: " + requested_date);
+            wl.load_daily_log(requested_date);
+        } else {
+            console.log("couldn't find log for: " + requested_date);
         };
     }
 });

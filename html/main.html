@@ -435,8 +435,8 @@
                 </b>
                 <p>
                     <div class="input-append">
-                        <input id="appendedInputButton" class="span3" type="text" placeholder="ex: '2014-7-22'">
-                        <button id="go_to_day" class="btn" type="button">Go!</button>
+                        <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
+                        <button class="btn" id="load_log_with_date" type="button">Load</button>
                     </div>
                 </p>
             {{else}}
@@ -447,6 +447,10 @@
                         </span>
                     </b>
                 </p>
+                <div class="input-append">
+                    <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
+                    <button class="btn" id="load_log_with_date" type="button">Load</button>
+                </div>
                 <p>
                     <button id="start_todays_log" class="btn" type="button">Start Today's Log</button>
                 </p>
@@ -481,12 +485,14 @@
                             {{#if value.recently_changed}}*{{/if}}{{value.name}}
                         </td>
                         {{#each key_value value.tasks}}
-                            <td class="work_item_task {{value.visible}} {{value.lateness}}">
-                                {{value.name}}
-                                </br>
-                                <span class="task_notes">
-                                    {{value.deadline}}
-                                </span>
+                            <td class="work_item_task {{value.visible}} {{value.lateness}} pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
+
+                                    {{value.name}}
+                                    </br>
+                                    <span class="task_deadline">
+                                        {{value.deadline}}
+                                    </span>
+
                             </td>
                         {{/each}}
                     </tr>
