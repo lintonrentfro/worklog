@@ -486,13 +486,11 @@
                         </td>
                         {{#each key_value value.tasks}}
                             <td class="work_item_task {{value.visible}} {{value.lateness}} pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
-
-                                    {{value.name}}
-                                    </br>
-                                    <span class="task_deadline">
-                                        {{value.deadline}}
-                                    </span>
-
+                                {{value.name}}
+                                </br>
+                                <span class="task_deadline">
+                                    {{value.deadline}}
+                                </span>
                             </td>
                         {{/each}}
                     </tr>

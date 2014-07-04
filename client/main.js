@@ -987,9 +987,55 @@ Template.daily_log.events({
         } else {
             console.log("couldn't find log for: " + requested_date);
         };
+    },
+    "click .work_item_task" : function() {
+        var this_user = Session.get("user").username;
+        var now = new Date();
+        var log_id = this.value.parent_log_item_id;
+        var work_item_key = this.value.parent_work_item_key;
+        var task_key = this.key;
+
+        if(Session.get("todays_log").work_items[work_item_key].tasks[task_key].completed_by) {
+            // if the admin is logged in, remove that the task was completed
+            if(this_user == "admin") {
+                if(confirm("Set this task as uncompleted?")) {
+                    var obj = {};
+                    var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
+                    obj[field1] = "";
+                    var field2 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_time";
+                    obj[field2] = "";
+
+                    // update the db
+                    daily_logs.update(
+                        {
+                            _id : log_id
+                        },
+                        {
+                            $set : obj
+                        }
+                    );
+                };
+            };
+        } else {
+            var obj = {};
+            var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
+            obj[field1] = this_user;
+            var field2 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_time";
+            obj[field2] = now;
+
+            // update the db
+            daily_logs.update(
+                {
+                    _id : log_id
+                },
+                {
+                    $set : obj
+                }
+            );
+        };
     }
 });
 
 // refresh the visual indicators of "lateness" every two seconds when user is viewing a live log
-setInterval(wl.refresh_live_log, 2000);
+setInterval(wl.refresh_live_log, 700);
 
