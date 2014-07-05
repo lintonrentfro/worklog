@@ -414,7 +414,7 @@
 </template>
 
 <template name="daily_log">
-    <div class="row">
+    <div class="row hidden-phone">
         <div class="span4">
             {{#if todays_log}}
                 <b>WI Groups</b></br>
@@ -465,6 +465,38 @@
                         <span class="filter_task_group {{value.visual}}">{{value.name}}</span></br>
                     {{/each}}
                 {{/if}}
+            {{/if}}
+        </div>
+    </div>
+    <div class="row visible-phone">
+        <div class="span12" align="center">
+            {{#if todays_log}}
+                <b>
+                    <span style="font-size:24pt">
+                        {{todays_log.day}}
+                    </span>
+                </b>
+                <p>
+                    <div class="input-append">
+                        <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
+                        <button class="btn" id="load_log_with_date" type="button">Load</button>
+                    </div>
+                </p>
+            {{else}}
+                <p>
+                    <b>
+                        <span style="font-size:20pt">
+                            No Log For Today
+                        </span>
+                    </b>
+                </p>
+                <div class="input-append">
+                    <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
+                    <button class="btn" id="load_log_with_date" type="button">Load</button>
+                </div>
+                <p>
+                    <button id="start_todays_log" class="btn" type="button">Start Today's Log</button>
+                </p>
             {{/if}}
         </div>
     </div>
