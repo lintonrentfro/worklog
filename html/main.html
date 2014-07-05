@@ -479,14 +479,22 @@
         <div class="span12">
         {{#if todays_log}}
             {{#each key_value todays_log.work_items}}
-                <table class="table table-bordered {{value.visible}}">
+                <table class="table table-bordered work_item {{value.visible}}">
                     <tr>
                         <td class="log_work_item">
                             {{#if value.recently_changed}}*{{/if}}{{value.name}}
                         </td>
                         {{#each key_value value.tasks}}
-                            <td class="work_item_task {{value.visible}} {{value.lateness}} pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
-                                {{value.name}}
+                            <td class="work_item_task {{value.visible}} {{#if value.completed_by}}completed_{{value.lateness}}{{else}}{{value.lateness}}{{/if}} pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
+                                <span class="
+                                    {{#if value.completed_by}}
+                                        task_completed
+                                        {{#if value.lateness}}
+                                            _{{value.lateness}}
+                                        {{/if}}
+                                    {{/if}}">
+                                    {{value.name}}
+                                </span>
                                 </br>
                                 <span class="task_deadline">
                                     {{value.deadline}}

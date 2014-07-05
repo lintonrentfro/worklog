@@ -2,7 +2,7 @@
 	background-color : #F8F8FF;
 }
 .task_deadline {
-	font-size: 12px;
+	font-size: 10px;
 }
 .wi_group_selected {
 	color: green;
@@ -11,6 +11,16 @@
 .wi_group_not_selected {
 	color: grey;
 	cursor: pointer;
+}
+.work_item {
+	margin: 2px;
+}
+.work_item td {
+	padding: 2px;
+	font-size: 12px;
+}
+.work_item tr {
+	padding: 0px;
 }
 .pointer {
 	cursor: pointer;
@@ -26,6 +36,18 @@
 .task_late {
 	background-color : red;
 }
-.task_final_hour {
-	background-color : yellow;
+.task_final_half_hour {
+	background-color : gold;
+}
+.completed_task_late {
+	color: red;
+	font-weight: bold;
+}
+.completed_task_final_half_hour {
+	color: gold;
+	font-weight: bold;
+}
+.completed_ {
+	color: green;
+	font-weight: bold;
 }
