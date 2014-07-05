@@ -1077,6 +1077,8 @@ Template.reports.events({
     }
 });
 
-// refresh the visual indicators of "lateness" every two seconds when user is viewing a live log
-setInterval(wl.refresh_live_log, 700);
+
+
+// refresh the visual indicators of "lateness" every second when user is viewing a live log
+setInterval(wl.refresh_live_log, 1000);
 

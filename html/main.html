@@ -67,7 +67,7 @@
         <div class="row">
             <div class="span12">
                 <form class="form">
-                    <label>Position</label>
+                    <label>Position (1-99)</label>
                     <input class="span2" type="text" id="new_position" value="{{edit_task.position}}"></br>
                     <label>Name</label>
                     <input class="span4" type="text" id="new_task_name" value="{{edit_task.name}}"></br>
@@ -126,13 +126,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="span12">
-                    Active: {{edit_work_item.active}}
-                    </br>
-                    Make this a button that toggles the "active" attribute.
-                </div>
-            </div>
-            <div class="row">
                 <div class="span6">
                     <b>This Work Item's Groups (click to remove)</b>
                     </br>
@@ -170,7 +163,7 @@
             <div class="row">
                 <div class="span12">
                     <form class="form">
-                        <label>Position</label>
+                        <label>Position (1-99)</label>
                         <input class="span2" type="text" id="position" placeholder="example: 3"></br>
                         <label>Name</label>
                         <input class="span4" type="text" id="task_name"></br>
@@ -536,6 +529,13 @@
     </div>
     <div class="row">
         <div class="span12">
+            <p>
+                * This work item has been changed in the last 3 days.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
         {{#if todays_log}}
             {{#each key_value todays_log.work_items}}
                 <table class="table table-bordered work_item {{value.visible}}">
@@ -558,6 +558,10 @@
                                 <span class="task_deadline">
                                     {{value.deadline}}
                                 </span>
+                                <br>
+                                {{#if value.completed_by}}
+                                    {{value.completed_by}} @ {{value.completed_time}}
+                                {{/if}}
                             </td>
                         {{/each}}
                     </tr>
