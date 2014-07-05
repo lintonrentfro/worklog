@@ -998,7 +998,7 @@ Template.daily_log.events({
         if(Session.get("todays_log").work_items[work_item_key].tasks[task_key].completed_by) {
             // if the admin is logged in, remove that the task was completed
             if(this_user == "admin") {
-                if(confirm("Set this task as uncompleted?")) {
+                if(confirm("Reset this task to incomplete?")) {
                     var obj = {};
                     var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
                     obj[field1] = "";
@@ -1015,6 +1015,8 @@ Template.daily_log.events({
                         }
                     );
                 };
+            } else {
+                alert("Only the application administrator can edit a completed task.");
             };
         } else {
             var obj = {};
