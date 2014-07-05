@@ -1045,15 +1045,30 @@ Template.reports.daily_log_csv = function() {
 };
 Template.reports.events({
     "click #show_log_xml_for_date" : function() {
-        var requested_date = document.getElementById('log_date').value;
-        var log_requested = daily_logs.findOne(
+        var start_date = document.getElementById('log_date_start').value;
+        var end_date = document.getElementById('log_date_end').value;
+
+        console.log(start_date);
+        console.log(end_date);
+
+        // var logs = daily_logs.find(
+        //     {
+        //         day : requested_date
+        //     }
+        // );
+        var logs = daily_logs.find(
             {
-                day : requested_date
+                day :
+                    {
+                        $gte : start_date,
+                        $lte : end_date
+                    }
             }
-        );
-        if(log_requested) {
-            console.log("found that day");
-            var csv = wl.daily_log_csv_report(log_requested);
+        ).fetch();
+        if(logs) {
+            console.log("found these days");
+            console.log(logs);
+            var csv = wl.daily_log_csv_report(logs);
             Session.set("daily_log_csv",csv);
 
         } else {

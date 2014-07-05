@@ -37,15 +37,18 @@
     {{else}}
         <div class="row">
             <div class="span12">
-                <h3>View a Day as XML</h3>
+                <h3>Export Daily Logs to CSV Format</h3>
             </div>
         </div>
         <div class="row">
             <div class="span12">
-                <div class="input-append">
-                    <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
-                    <button class="btn" id="show_log_xml_for_date" type="button">Load</button>
-                </div>
+                <label>Start Date</label>
+                <input class="span3" id="log_date_start" type="text" placeholder="ex: 2014-04-12">
+                <br>
+                <label>End Date</label>
+                <input class="span3" id="log_date_end" type="text" placeholder="ex: 2014-04-16">
+                <br>
+                <button class="btn" id="show_log_xml_for_date" type="button">Load</button>
             </div>
         </div>
     {{/if}}
