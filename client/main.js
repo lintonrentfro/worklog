@@ -1038,6 +1038,33 @@ Template.daily_log.events({
     }
 });
 
+Template.reports.daily_log_csv = function() {
+    if(Session.get("daily_log_csv")) {
+        return Session.get("daily_log_csv");
+    };
+};
+Template.reports.events({
+    "click #show_log_xml_for_date" : function() {
+        // var requested_date = document.getElementById('log_date').value;
+        var requested_date = "2014-07-05";
+        // console.log(requested_date);
+        var log_requested = daily_logs.findOne(
+            {
+                day : requested_date
+            }
+        );
+        if(log_requested) {
+            console.log("found that day");
+            var csv = wl.daily_log_csv_report(log_requested);
+            console.log(csv);
+            Session.set("daily_log_csv",csv);
+
+        } else {
+            console.log("nuh uh");
+        }
+    }
+});
+
 // refresh the visual indicators of "lateness" every two seconds when user is viewing a live log
 setInterval(wl.refresh_live_log, 700);
 

@@ -10,7 +10,7 @@
             {{>home}}
         {{/if}}
         {{#if page1}}
-            Log 1.
+            {{>reports}}
         {{/if}}
         {{#if daily_log}}
             {{>daily_log}}
@@ -25,6 +25,30 @@
     <div class="row">
         <div class="span12">Homepage stuff.</div>
     </div>
+</template>
+
+<template name="reports">
+    {{#if daily_log_csv}}
+        <div class="row">
+            <div class="span12">
+                <pre>{{daily_log_csv}}</pre>
+            </div>
+        </div>
+    {{else}}
+        <div class="row">
+            <div class="span12">
+                <h3>View a Day as XML</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <div class="input-append">
+                    <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
+                    <button class="btn" id="show_log_xml_for_date" type="button">Load</button>
+                </div>
+            </div>
+        </div>
+    {{/if}}
 </template>
 
 <template name="settings">
@@ -382,14 +406,14 @@
             <a id="home" class="brand" href="javascript:void(0)">WorkLog</a>
             <ul class="nav">
                 {{#if is_logged_in}}
-                    <li id="page1" class="{{#if page1}}{{page1}}{{/if}}">
-                        <a href="javascript:void(0)">Page1</a>
-                    </li>
                     <li id="daily_log" class="{{#if daily_log}}{{daily_log}}{{/if}}">
-                        <a href="javascript:void(0)">daily log</a>
+                        <a href="javascript:void(0)">Daily Logs</a>
                     </li>
                 {{/if}}
                 {{#if is_admin}}
+                    <li id="page1" class="{{#if page1}}{{page1}}{{/if}}">
+                        <a href="javascript:void(0)">Reports</a>
+                    </li>
                     <li id="page3" class="{{#if page3}}{{page3}}{{/if}}">
                         <a href="javascript:void(0)">Settings</a>
                     </li>
