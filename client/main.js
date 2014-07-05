@@ -1045,9 +1045,7 @@ Template.reports.daily_log_csv = function() {
 };
 Template.reports.events({
     "click #show_log_xml_for_date" : function() {
-        // var requested_date = document.getElementById('log_date').value;
-        var requested_date = "2014-07-05";
-        // console.log(requested_date);
+        var requested_date = document.getElementById('log_date').value;
         var log_requested = daily_logs.findOne(
             {
                 day : requested_date
@@ -1056,7 +1054,6 @@ Template.reports.events({
         if(log_requested) {
             console.log("found that day");
             var csv = wl.daily_log_csv_report(log_requested);
-            console.log(csv);
             Session.set("daily_log_csv",csv);
 
         } else {
