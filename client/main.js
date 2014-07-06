@@ -16,9 +16,9 @@ Handlebars.registerHelper("home", function() {
         return Session.get("home");
     };
 });
-Handlebars.registerHelper("page1", function() {
-    if(Session.get("page1")) {
-        return Session.get("page1");
+Handlebars.registerHelper("reports", function() {
+    if(Session.get("reports")) {
+        return Session.get("reports");
     };
 });
 Handlebars.registerHelper("daily_log", function() {
@@ -26,9 +26,9 @@ Handlebars.registerHelper("daily_log", function() {
         return Session.get("daily_log");
     };
 });
-Handlebars.registerHelper("page3", function() {
-    if(Session.get("page3")) {
-        return Session.get("page3");
+Handlebars.registerHelper("settings", function() {
+    if(Session.get("settings")) {
+        return Session.get("settings");
     };
 });
 
@@ -62,72 +62,39 @@ Handlebars.registerHelper('key_value', function(context, options) {
 /*
  Nav
  */
-Template.nav.day_started = function() {
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = now.getMonth() + 1;
-    if(month < 10) {
-        month = "0" + month;
-    };
-    var day = now.getDate();
-    var ymd = year + '-' + month + '-' + day;
-    var todays_log = daily_logs.findOne(
-        {
-            day : ymd
-        }
-    );
-    if(todays_log) {
-        // console.log("found today's log ...");
-        return 1;
-    } else {
-        // console.log("starting today's log ...");
-        // daily_logs.insert(
-        //     {
-        //         day : ymd
-        //     }
-        // );
-        return 0;
-    };
-};
+// Template.nav.day_started = function() {
+//     var now = new Date();
+//     var year = now.getFullYear();
+//     var month = now.getMonth() + 1;
+//     if(month < 10) {
+//         month = "0" + month;
+//     };
+//     var day = now.getDate();
+//     var ymd = year + '-' + month + '-' + day;
+//     var todays_log = daily_logs.findOne(
+//         {
+//             day : ymd
+//         }
+//     );
+//     if(todays_log) {
+//         return 1;
+//     } else {
+//         return 0;
+//     };
+// };
 Template.nav.events({
     "click #home" : function() {
         /*
             DEV SHORTCUT - NOT TO BE USED IN LIVE VERSION
         */
-        wl.set_route("page3");
+        wl.set_route("home");
         var this_user = workers.findOne({username:"admin",password:"coffee"});
         Session.set("user",this_user);
     },
-    "click #page1" : function() {
-        // date testing: this all works
-
-        // var now = new Date();
-        // var year = now.getFullYear();
-        // var month = now.getMonth() + 1;
-        // if(month < 10) {
-        //     month = "0" + month.toString();
-        // };
-        // var day = now.getDate();
-        // var ymd = year + '-' + month + '-' + day;
-        // var todays_log = daily_logs.findOne(
-        //     {
-        //         day : ymd
-        //     }
-        // );
-        // if(todays_log) {
-        //     console.log("found today's log ...");
-        // } else {
-        //     console.log("starting today's log ...");
-        //     daily_logs.insert(
-        //         {
-        //             day : ymd
-        //         }
-        //     );
-        // };
-        wl.set_route("page1");
+    "click #reports" : function() {
+        wl.set_route("reports");
     },
     "click #daily_log" : function() {
-
         // calculate today's Y:M:D
         var now = new Date();
         var year = now.getFullYear();
@@ -151,19 +118,13 @@ Template.nav.events({
         // if today's log already exists use as by default
         // if it doesn't already exist, don't load any log
         if(!log_for_today) {
-            console.log("there's no log for " + ymd);
             wl.set_route("daily_log");
-            // wl.start_new_daily_log(ymd);
-
         } else {
-            // console.log("loading existing daily log for " + ymd);
             wl.load_daily_log(ymd);
-            // console.log("deleting today's log");
-            // wl.set_route("daily_log");
         };
     },
-    "click #page3" : function() {
-        wl.set_route("page3");
+    "click #settings" : function() {
+        wl.set_route("settings");
     },
     "click #login" : function() {
         var username = document.getElementById('username').value;
@@ -995,6 +956,7 @@ Template.daily_log.events({
         var work_item_key = this.value.parent_work_item_key;
         var task_key = this.key;
 
+        // if the task is already complete
         if(Session.get("todays_log").work_items[work_item_key].tasks[task_key].completed_by) {
             // if the admin is logged in, remove that the task was completed
             if(this_user == "admin") {
@@ -1044,18 +1006,9 @@ Template.reports.daily_log_csv = function() {
     };
 };
 Template.reports.events({
-    "click #show_log_xml_for_date" : function() {
+    "click #show_log_csv_for_date_range" : function() {
         var start_date = document.getElementById('log_date_start').value;
         var end_date = document.getElementById('log_date_end').value;
-
-        console.log(start_date);
-        console.log(end_date);
-
-        // var logs = daily_logs.find(
-        //     {
-        //         day : requested_date
-        //     }
-        // );
         var logs = daily_logs.find(
             {
                 day :
@@ -1077,8 +1030,6 @@ Template.reports.events({
     }
 });
 
-
-
-// refresh the visual indicators of "lateness" every second when user is viewing a live log
+// refresh the visual indicators of lateness/completeness every second when user is viewing a live log
 setInterval(wl.refresh_live_log, 1000);
 

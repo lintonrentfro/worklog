@@ -9,13 +9,13 @@
         {{#if home}}
             {{>home}}
         {{/if}}
-        {{#if page1}}
+        {{#if reports}}
             {{>reports}}
         {{/if}}
         {{#if daily_log}}
             {{>daily_log}}
         {{/if}}
-        {{#if page3}}
+        {{#if settings}}
             {{>settings}}
         {{/if}}
     </div>
@@ -48,7 +48,7 @@
                 <label>End Date</label>
                 <input class="span3" id="log_date_end" type="text" placeholder="ex: 2014-04-16">
                 <br>
-                <button class="btn" id="show_log_xml_for_date" type="button">Load</button>
+                <button class="btn" id="show_log_csv_for_date_range" type="button">Load</button>
             </div>
         </div>
     {{/if}}
@@ -407,10 +407,10 @@
                     </li>
                 {{/if}}
                 {{#if is_admin}}
-                    <li id="page1" class="{{#if page1}}{{page1}}{{/if}}">
+                    <li id="reports" class="{{#if reports}}{{reports}}{{/if}}">
                         <a href="javascript:void(0)">Reports</a>
                     </li>
-                    <li id="page3" class="{{#if page3}}{{page3}}{{/if}}">
+                    <li id="settings" class="{{#if settings}}{{settings}}{{/if}}">
                         <a href="javascript:void(0)">Settings</a>
                     </li>
                 {{/if}}
@@ -437,12 +437,13 @@
     <div class="row hidden-phone">
         <div class="span4">
             {{#if todays_log}}
-                <b>WI Groups</b></br>
-                <span id="toggle_all_wi_groups" class="pointer">*Toggle All*</span></br>
+                <span id="toggle_all_wi_groups" class="label label-info pointer">Work Item Groups</span></br>
                 {{#if wi_groups}}
-                    {{#each key_value wi_groups}}
-                        <span class="filter_wi_group {{value.visual}}">{{value.name}}</span></br>
-                    {{/each}}
+                    <ul class="unstyled unstyled_list_small">
+                        {{#each key_value wi_groups}}
+                            <li><span class="filter_wi_group {{value.visual}}">{{value.name}}</span></li>
+                        {{/each}}
+                    </ul>
                 {{/if}}
             {{/if}}
         </div>
@@ -478,12 +479,13 @@
         </div>
         <div class="span4" align="right">
             {{#if todays_log}}
-                <b align="right">Task Groups</b></br>
-                <span id="toggle_all_task_groups" class="pointer">*Toggle All*</span></br>
+                <span id="toggle_all_task_groups" class="label label-info pointer">Task Groups</span></br>
                 {{#if task_groups}}
-                    {{#each key_value task_groups}}
-                        <span class="filter_task_group {{value.visual}}">{{value.name}}</span></br>
-                    {{/each}}
+                    <ul class="unstyled unstyled_list_small">
+                        {{#each key_value task_groups}}
+                            <li><span class="filter_task_group {{value.visual}}">{{value.name}}</span></li>
+                        {{/each}}
+                    </ul>
                 {{/if}}
             {{/if}}
         </div>
@@ -520,17 +522,13 @@
             {{/if}}
         </div>
     </div>
-    <div class="row">
-        <div class="span12">
-            {{#if todays_log}}
-                <hr>
-            {{/if}}
-        </div>
-    </div>
+
     <div class="row">
         <div class="span12">
             <p>
-                * This work item has been changed in the last 3 days.
+                <span style="background-color: #FFFF00">
+                    This work item has been changed in the last 3 days.
+                </span>
             </p>
         </div>
     </div>
@@ -541,7 +539,13 @@
                 <table class="table table-bordered work_item {{value.visible}}">
                     <tr>
                         <td class="log_work_item">
-                            {{#if value.recently_changed}}*{{/if}}{{value.name}}
+                            {{#if value.recently_changed}}
+                                <span style="background-color: #FFFF00">
+                            {{/if}}
+                            {{value.name}}
+                            {{#if value.recently_changed}}
+                                </span>
+                            {{/if}}
                         </td>
                         {{#each key_value value.tasks}}
                             <td class="work_item_task {{value.visible}} {{#if value.completed_by}}completed_{{value.lateness}}{{else}}{{value.lateness}}{{/if}} pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
@@ -556,7 +560,9 @@
                                 </span>
                                 </br>
                                 <span class="task_deadline">
-                                    {{value.deadline}}
+                                    {{#if value.deadline}}
+                                        Due: {{value.deadline}}
+                                    {{/if}}
                                 </span>
                                 <br>
                                 {{#if value.completed_by}}

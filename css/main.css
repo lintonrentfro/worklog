@@ -4,12 +4,15 @@
 .task_deadline {
 	font-size: 12px;
 }
+.filter_header {
+	font-size: 20px;
+}
 .wi_group_selected {
-	color: green;
+	color: black;
 	cursor: pointer;
 }
 .wi_group_not_selected {
-	color: grey;
+	color: #D3D3D3;
 	cursor: pointer;
 }
 .work_item {
@@ -26,11 +29,11 @@
 	cursor: pointer;
 }
 .task_group_selected {
-	color: green;
+	color: black;
 	cursor: pointer;
 }
 .task_group_not_selected {
-	color: grey;
+	color: #D3D3D3;
 	cursor: pointer;
 }
 .task_late {
@@ -50,4 +53,8 @@
 .completed_ {
 	color: green;
 	font-weight: bold;
+}
+.unstyled_list_small {
+	font-size: 10px;
+	line-height: 0px;
 }
