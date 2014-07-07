@@ -522,13 +522,10 @@
             {{/if}}
         </div>
     </div>
-
     <div class="row">
         <div class="span12">
             <p>
-                <span style="background-color: #FFFF00">
-                    This work item has been changed in the last 3 days.
-                </span>
+                * Changed within last seven days.
             </p>
         </div>
     </div>
@@ -538,12 +535,21 @@
             {{#each key_value todays_log.work_items}}
                 <table class="table table-bordered work_item {{value.visible}}">
                     <tr>
-                        <td class="log_work_item">
+                        <td class="log_work_item pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
                             {{#if value.recently_changed}}
-                                <span style="background-color: #FFFF00">
+                                <span style="font-size: 8px">
+                                    *
+                                </span>
                             {{/if}}
                             {{value.name}}
-                            {{#if value.recently_changed}}
+                            <br>
+                            {{#if value.notes}}
+                                <span style="background-color: #FFFF00">
+                            {{/if}}
+                            <span class="add_to_notes">
+                                notes
+                            </span>
+                            {{#if value.notes}}
                                 </span>
                             {{/if}}
                         </td>

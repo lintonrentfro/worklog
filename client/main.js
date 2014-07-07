@@ -997,6 +997,42 @@ Template.daily_log.events({
                 }
             );
         };
+    },
+    "click .log_work_item" : function() {
+        var id = Session.get("todays_log")._id;
+        console.log(this.value);
+        console.log(id);
+        if(this.value.notes.length == 0) {
+            var new_notes = prompt("Add a note:");
+            var obj = {};
+            var field = "work_items." + this.key + ".notes";
+            obj[field] = new_notes;
+            daily_logs.update(
+                {
+                    _id : id
+                },
+                {
+                    $set : obj
+                }
+            );
+            console.log(this.value);
+        } else {
+            console.log("had notes");
+            var old_notes = this.value.notes;
+            var new_note = prompt("Add a note:");
+            var updated_notes = old_notes + " | " + new_note;
+            var obj = {};
+            var field = "work_items." + this.key + ".notes";
+            obj[field] = updated_notes;
+            daily_logs.update(
+                {
+                    _id : id
+                },
+                {
+                    $set : obj
+                }
+            );
+        };
     }
 });
 
@@ -1031,5 +1067,5 @@ Template.reports.events({
 });
 
 // refresh the visual indicators of lateness/completeness every second when user is viewing a live log
-setInterval(wl.refresh_live_log, 1000);
+setInterval(wl.refresh_live_log, wl.settings().daily_log_view_refresh_interval);
 
