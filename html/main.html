@@ -522,13 +522,15 @@
             {{/if}}
         </div>
     </div>
-    <div class="row">
-        <div class="span12">
-            <p>
-                * Changed within last seven days.
-            </p>
+    {{#if todays_log}}
+        <div class="row">
+            <div class="span12">
+                <p>
+                    * Changed within last seven days.
+                </p>
+            </div>
         </div>
-    </div>
+    {{/if}}
     <div class="row">
         <div class="span12">
         {{#if todays_log}}
