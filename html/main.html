@@ -68,13 +68,13 @@
             <div class="span12">
                 <form class="form">
                     <label>Position (1-99)</label>
-                    <input class="span2" type="text" id="new_position" value="{{edit_task.position}}"></br>
+                    <input class="span2" type="text" id="new_position" value="{{edit_task.position}}"><br>
                     <label>Name</label>
-                    <input class="span4" type="text" id="new_task_name" value="{{edit_task.name}}"></br>
+                    <input class="span4" type="text" id="new_task_name" value="{{edit_task.name}}"><br>
                     <label>Daily Deadline</label>
-                    <input class="span3" type="text" id="new_deadline" value="{{edit_task.deadline}}"></br>
+                    <input class="span3" type="text" id="new_deadline" value="{{edit_task.deadline}}"><br>
                     <label>Notes</label>
-                    <input class="span6" type="text" id="new_notes" value="{{edit_task.notes}}"></br>
+                    <input class="span6" type="text" id="new_notes" value="{{edit_task.notes}}"><br>
                     <button type="btn" class="btn" id="update_task">update task</button>
                 </form>
             </div>
@@ -82,17 +82,17 @@
         <div class="row">
             <div class="span6">
                 <b>This Task's Group (click to remove)</b>
-                </br>
+                <br>
                 {{#if edit_task.group}}
                     <a href="javascript:void(0)">
                         <span id="remove_task_group_from_task">{{edit_task.group}}</span>
                     </a>
-                    </br>
+                    <br>
                 {{/if}}
             </div>
             <div class="span6">
                 <b>All Task Groups (click to add)</b>
-                </br>
+                <br>
                 {{#if task_groups}}
                     {{#each key_value task_groups}}
                         <span class="add_task_group_to_task">
@@ -100,7 +100,7 @@
                                 {{value.name}}
                             </a>
                         </span>
-                        </br>
+                        <br>
                     {{/each}}
                 {{/if}}
             </div>
@@ -118,17 +118,19 @@
             <div class="row">
                 <div class="span12">
                     <form class="form">
-                        <div class="input-append">
-                            <input class="" id="name" type="text" value="{{edit_work_item.name}}">
-                            <button class="btn" type="button" id="update_work_item_name">update work item name</button>
-                        </div>
+                        <label>New Name</label>
+                        <input class="" id="name" type="text" value="{{edit_work_item.name}}">
+                        <label>New Deadline</label>
+                        <input class="" id="wi_deadline" type="text" value="{{edit_work_item.deadline}}" placeholder="ex: 13:05">
+                        <br>
+                        <button class="btn" type="button" id="update_work_item">update work item</button>
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="span6">
                     <b>This Work Item's Groups (click to remove)</b>
-                    </br>
+                    <br>
                     {{#if edit_work_item.groups}}
                         {{#each key_value edit_work_item.groups}}
                             <span class="remove_work_item_group_from_work_item">
@@ -136,13 +138,13 @@
                                     {{value}}
                                 </a>
                             </span>
-                            </br>
+                            <br>
                         {{/each}}
                     {{/if}}
                 </div>
                 <div class="span6">
                     <b>All Work Item Groups (click to add)</b>
-                    </br>
+                    <br>
                     {{#if work_item_groups}}
                         {{#each key_value work_item_groups}}
                             <span class="add_work_item_group_to_work_item">
@@ -150,7 +152,7 @@
                                     {{value.name}}
                                 </a>
                             </span>
-                            </br>
+                            <br>
                         {{/each}}
                     {{/if}}
                 </div>
@@ -164,13 +166,13 @@
                 <div class="span12">
                     <form class="form">
                         <label>Position (1-99)</label>
-                        <input class="span2" type="text" id="position" placeholder="example: 3"></br>
+                        <input class="span2" type="text" id="position" placeholder="example: 3"><br>
                         <label>Name</label>
-                        <input class="span4" type="text" id="task_name"></br>
+                        <input class="span4" type="text" id="task_name"><br>
                         <label>Daily Deadline</label>
-                        <input class="span3" type="text" id="deadline" placeholder="example: 14:30"></br>
+                        <input class="span3" type="text" id="deadline" placeholder="example: 14:30"><br>
                         <label>Notes</label>
-                        <input class="span6" type="text" id="notes"></br>
+                        <input class="span6" type="text" id="notes"><br>
                         <button type="btn" class="btn" id="add_task">add task</button>
                     </form>
                 </div>
@@ -423,9 +425,10 @@
                 <form class="navbar-form pull-right">
                     <div id="login_form">
                         <div id="username_group" class="control-group">
-                        <input type="text" class="span2" placeholder="username" id="username">
-                        <input type="password" class="span2" placeholder="password" id="password">
-                        <button type="btn" class="btn" id="login">login</button>
+                            <input type="text" class="span2" placeholder="username" id="username">
+                            <input type="password" class="span2" placeholder="password" id="password">
+                            <button type="btn" class="btn" id="login">login</button>
+                        </div>
                     </div>
                 </form>
             {{/if}}
@@ -437,7 +440,7 @@
     <div class="row hidden-phone">
         <div class="span4">
             {{#if todays_log}}
-                <span id="toggle_all_wi_groups" class="label label-info pointer">Work Item Groups</span></br>
+                <span id="toggle_all_wi_groups" class="label label-info pointer">Work Item Groups</span><br>
                 {{#if wi_groups}}
                     <ul class="unstyled unstyled_list_small">
                         {{#each key_value wi_groups}}
@@ -449,37 +452,25 @@
         </div>
         <div class="span4" align="center">
             {{#if todays_log}}
-                <b>
-                    <span style="font-size:24pt">
-                        {{todays_log.day}}
-                    </span>
-                </b>
-                <p>
-                    <div class="input-append">
-                        <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
-                        <button class="btn" id="load_log_with_date" type="button">Load</button>
-                    </div>
-                </p>
-            {{else}}
-                <p>
-                    <b>
-                        <span style="font-size:20pt">
-                            No Log For Today
-                        </span>
-                    </b>
-                </p>
-                <div class="input-append">
-                    <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
-                    <button class="btn" id="load_log_with_date" type="button">Load</button>
+                <div class="btn-group">
+                    <button class="btn" id="go_back_1_day"><<<</button>
+                    <button class="btn"><b>{{todays_log.day}}</b></button>
+                    <button class="btn" id="go_forward_1_day">>>></button>
                 </div>
-                <p>
-                    <button id="start_todays_log" class="btn" type="button">Start Today's Log</button>
-                </p>
+            {{else}}
+                no log loaded
             {{/if}}
+            <p>
+                <div class="input-append">
+                    <input class="span2" id="log_date" type="text" placeholder="ex: 2014-04-12">
+                    <button class="btn" id="load_log_with_date" type="button">Load</button>
+                    <button class="btn" id="start_log_by_date" type="button">Create</button>
+                </div>
+            </p>
         </div>
         <div class="span4" align="right">
             {{#if todays_log}}
-                <span id="toggle_all_task_groups" class="label label-info pointer">Task Groups</span></br>
+                <span id="toggle_all_task_groups" class="label label-info pointer">Task Groups</span><br>
                 {{#if task_groups}}
                     <ul class="unstyled unstyled_list_small">
                         {{#each key_value task_groups}}
@@ -487,38 +478,6 @@
                         {{/each}}
                     </ul>
                 {{/if}}
-            {{/if}}
-        </div>
-    </div>
-    <div class="row visible-phone">
-        <div class="span12" align="center">
-            {{#if todays_log}}
-                <b>
-                    <span style="font-size:24pt">
-                        {{todays_log.day}}
-                    </span>
-                </b>
-                <p>
-                    <div class="input-append">
-                        <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
-                        <button class="btn" id="load_log_with_date" type="button">Load</button>
-                    </div>
-                </p>
-            {{else}}
-                <p>
-                    <b>
-                        <span style="font-size:20pt">
-                            No Log For Today
-                        </span>
-                    </b>
-                </p>
-                <div class="input-append">
-                    <input class="span3" id="log_date" type="text" placeholder="ex: 2014-04-12">
-                    <button class="btn" id="load_log_with_date" type="button">Load</button>
-                </div>
-                <p>
-                    <button id="start_todays_log" class="btn" type="button">Start Today's Log</button>
-                </p>
             {{/if}}
         </div>
     </div>
@@ -531,6 +490,20 @@
             </div>
         </div>
     {{/if}}
+    {{#if todays_log}}
+        <div class="row">
+            <div class="span12">
+                <p>
+                    <span id="sort_by_wi_name" class="label label-info pointer">
+                        Sort By Name
+                    </span> 
+                    <span id="sort_by_wi_deadline" class="label label-info pointer">
+                        Sort By Final Deadline
+                    </span>
+                </p>
+            </div>
+        </div>
+    {{/if}}
     <div class="row">
         <div class="span12">
         {{#if todays_log}}
@@ -538,12 +511,7 @@
                 <table class="table table-bordered work_item {{value.visible}}">
                     <tr>
                         <td class="log_work_item pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
-                            {{#if value.recently_changed}}
-                                <span style="font-size: 8px">
-                                    *
-                                </span>
-                            {{/if}}
-                            {{value.name}}
+                            {{#if value.recently_changed}}<span style="font-size: 8px">*</span>{{/if}}{{value.name}}
                             <br>
                             {{#if value.notes}}
                                 <span style="background-color: #FFFF00">
@@ -566,7 +534,7 @@
                                     {{/if}}">
                                     {{value.name}}
                                 </span>
-                                </br>
+                                <br>
                                 <span class="task_deadline">
                                     {{#if value.deadline}}
                                         Due: {{value.deadline}}
@@ -574,7 +542,7 @@
                                 </span>
                                 <br>
                                 {{#if value.completed_by}}
-                                    {{value.completed_by}} @ {{value.completed_time}}
+                                    {{value.completed_by}}@{{value.completed_time}}
                                 {{/if}}
                             </td>
                         {{/each}}

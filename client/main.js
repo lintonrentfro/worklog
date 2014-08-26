@@ -338,9 +338,11 @@ Template.settings.events({
     },
     "click #close_edit_workitem" : function() {
         Session.set("edit_work_item",null);
+        // get rid of the edit task key session variable, too
     },
-    "click #update_work_item_name" : function() {
+    "click #update_work_item" : function() {
         var name = document.getElementById('name').value;
+        var deadline = document.getElementById('wi_deadline').value;
         if(name) {
             var now = new Date();
             work_items.update(
@@ -351,6 +353,7 @@ Template.settings.events({
                     $set :
                         {
                             name : name,
+                            deadline : deadline,
                             last_modified : now
                         }
                 }
@@ -410,14 +413,7 @@ Template.settings.events({
     },
     "click .add_task_group_to_task" : function() {
         var new_group = this.value.name;
-        console.log("var new_group = " + new_group);
         var id = Session.get("edit_work_item")._id;
-
-        // something wrong here
-        // we've got new_group and group defined the same way
-        var group = this.value.name;
-
-        // update the work_item "last_modified" and "group" attributes
         var now = new Date();
         var work_item = work_items.findOne(
             {
@@ -425,7 +421,6 @@ Template.settings.events({
             }
         );
         var task_key = Session.get("edit_task_key");
-        console.log("var task_key = " + task_key);
         var now = new Date();
         var obj = {};
         var field1 = "tasks." + task_key + ".group";
@@ -447,6 +442,7 @@ Template.settings.events({
         new_edit_task.group = new_group;
         new_edit_task.notes = Session.get("edit_task").notes;
         new_edit_task.deadline = Session.get("edit_task").deadline;
+        new_edit_task.key = task_key;
         Session.set("edit_task",new_edit_task);
     },
     "click #remove_task_group_from_task" : function() {
@@ -464,6 +460,7 @@ Template.settings.events({
         obj[field1] = new_group;
         var field2 = "last_modified";
         obj[field2] = now;
+        console.log(obj);
         work_items.update(
             {
                 _id : id
@@ -481,6 +478,7 @@ Template.settings.events({
         Session.set("edit_task",new_edit_task);
     },
     "click #add_task" : function() {
+        // original version
         var position = document.getElementById('position').value;
         var name = document.getElementById('task_name').value;
         var deadline = document.getElementById('deadline').value;
@@ -522,8 +520,9 @@ Template.settings.events({
         // save the array key for this task as stored in mongo
         var tasks = Session.get("edit_work_item").tasks;
         for(var i=0; tasks.length>i; i++) {
-            if(tasks[i].name == edit_task.name && tasks[i].position == edit_task.position && tasks[i].group == edit_task.group) {
+            if(tasks[i].name == edit_task.name && tasks[i].position == edit_task.position) {
                 Session.set("edit_task_key", i);
+                console.log("edit_task_key = " + i);
             };
         };
 
@@ -557,6 +556,7 @@ Template.settings.events({
         };
     },
     "click #update_task" : function() {
+        // original
         var current_group_with_spaces = document.getElementById('remove_task_group_from_task').innerHTML;
         var current_group = current_group_with_spaces.trim();
         var now = new Date();
@@ -659,6 +659,8 @@ Template.daily_log.task_groups = function() {
         return Session.get("task_groups");
     };
 };
+
+// when the daily_log template has rendered, enable the tooltips
 Template.daily_log.rendered = function() {
    $('[rel=tooltip]').tooltip();
 };
@@ -666,8 +668,47 @@ Template.daily_log.events({
     "click .log_work_item" : function() {
         console.log(this);
     },
-    "click .log_task" : function() {
-        console.log(this);
+    "click #sort_by_wi_name" : function() {
+        // clear any wi deadline sorting if it's enabled
+        if(Session.get("wi_deadline_sort")) {
+            Session.set("wi_deadline_sort",null);
+        };
+
+        // if no wi name sorting is currently set, set it to descending order
+        // if it's set, toggle it between ascending and descending order
+        if(!Session.get("wi_name_sort")) {
+            console.log("wi name sort set to descending");
+            Session.set("wi_name_sort","descending");
+        } else {
+            if(Session.get("wi_name_sort") == "descending") {
+                console.log("wi name sort set to ascending");
+                Session.set("wi_name_sort", "ascending");
+            } else {
+                console.log("wi name sort set to descending");
+                Session.set("wi_name_sort", "descending");
+            };
+        };
+    },
+    "click #sort_by_wi_deadline" : function() {
+        // clear any wi name sorting if it's enabled
+        if(Session.get("wi_name_sort")) {
+            Session.set("wi_name_sort",null);
+        };
+
+        // if no wi deadline sorting is currently set, set it to descending order
+        // if it's set, toggle it between ascending and descending order
+        if(!Session.get("wi_deadline_sort")) {
+            console.log("wi deadline sort set to descending");
+            Session.set("wi_deadline_sort","descending");
+        } else {
+            if(Session.get("wi_deadline_sort") == "descending") {
+                console.log("wi deadline sort set to ascending");
+                Session.set("wi_deadline_sort", "ascending");
+            } else {
+                console.log("wi deadline sort set to descending");
+                Session.set("wi_deadline_sort", "descending");
+            };
+        };
     },
     "click .filter_wi_group" : function() {
         var wi_group = this.value.name;
@@ -900,6 +941,9 @@ Template.daily_log.events({
         Session.set("task_groups",tsk_groups);
     },
     "click #start_todays_log" : function() {
+
+        // THIS FUNCTION MAY NO LONGER BE NEEDED SINCE THE CAPABILITY TO ADD A LOG FOR A USER SUBMITTED DATE WAS ADDED
+
         // calculate today's Y:M:D
         var now = new Date();
         var year = now.getFullYear();
@@ -931,6 +975,27 @@ Template.daily_log.events({
             wl.load_daily_log(ymd);
         };
     },
+    "click #start_log_by_date" : function() {
+        var requested_date = document.getElementById('log_date').value;
+
+        // see if this log already exists for this date
+        var log_requested = daily_logs.findOne(
+            {
+                day : requested_date
+            }
+        );
+
+        // if this log exists, return error message
+        // if not, create daily log for that date and load it
+        if(log_requested) {
+            console.log("found existing log for date: " + requested_date);
+            confirm("Log for this date already exists.");
+        } else {
+            console.log("no existing log for " + requested_date + " found; creating and loading it");
+            wl.start_new_daily_log(requested_date);
+            wl.load_daily_log(requested_date);
+        };
+    },
     "click #load_log_with_date" : function() {
         var requested_date = document.getElementById('log_date').value;
 
@@ -949,54 +1014,121 @@ Template.daily_log.events({
             console.log("couldn't find log for: " + requested_date);
         };
     },
-    "click .work_item_task" : function() {
-        var this_user = Session.get("user").username;
-        var now = new Date();
-        var log_id = this.value.parent_log_item_id;
-        var work_item_key = this.value.parent_work_item_key;
-        var task_key = this.key;
+    "click #go_back_1_day" : function() {
+        // date of currently loaded log
+        var current_log_date = Session.get("todays_log").day;
 
-        // if the task is already complete
-        if(Session.get("todays_log").work_items[work_item_key].tasks[task_key].completed_by) {
-            // if the admin is logged in, remove that the task was completed
-            if(this_user == "admin") {
-                if(confirm("Reset this task to incomplete?")) {
-                    var obj = {};
-                    var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
-                    obj[field1] = "";
-                    var field2 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_time";
-                    obj[field2] = "";
+        // convert this to a date obj
+        var current_log_date_obj = dh.ymd_to_obj(current_log_date);
 
-                    // update the db
-                    daily_logs.update(
-                        {
-                            _id : log_id
-                        },
-                        {
-                            $set : obj
-                        }
-                    );
-                };
-            } else {
-                alert("Only the application administrator can edit a completed task.");
-            };
-        } else {
-            var obj = {};
-            var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
-            obj[field1] = this_user;
-            var field2 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_time";
-            obj[field2] = now;
+        for(var i=1; i<30; i++) {
+            // create previous day date obj
+            var previous_log_date_obj = dh.minus_x_days(current_log_date_obj,i);
+            
+            // create Y:M:D string for previous day
+            var requested_date = dh.obj_to_ymd(previous_log_date_obj);
 
-            // update the db
-            daily_logs.update(
+            // get this log
+            var log_requested = daily_logs.findOne(
                 {
-                    _id : log_id
-                },
-                {
-                    $set : obj
+                    day : requested_date
                 }
             );
+
+            // if this log exists, load it
+            if(log_requested) {
+                console.log("found existing log and loading it for: " + requested_date);
+                wl.load_daily_log(requested_date);
+                break;
+            } else {
+                console.log("did not find log for " + requested_date + ", going back 1 more day");
+            };
         };
+    },
+    "click #go_forward_1_day" : function() {
+        // date of currently loaded log
+        var current_log_date = Session.get("todays_log").day;
+
+        // convert this to a date obj
+        var current_log_date_obj = dh.ymd_to_obj(current_log_date);
+
+        for(var i=1; i<30; i++) {
+            // create previous day date obj
+            var previous_log_date_obj = dh.plus_x_days(current_log_date_obj,i);
+            
+            // create Y:M:D string for previous day
+            var requested_date = dh.obj_to_ymd(previous_log_date_obj);
+
+            // get this log
+            var log_requested = daily_logs.findOne(
+                {
+                    day : requested_date
+                }
+            );
+
+            // if this log exists, load it
+            if(log_requested) {
+                console.log("found existing log and loading it for: " + requested_date);
+                wl.load_daily_log(requested_date);
+                break;
+            } else {
+                console.log("did not find log for " + requested_date + ", going forward 1 more day");
+            };
+        };
+    },
+    "click .work_item_task" : function() {
+        console.log(this);
+        
+        // var this_user = Session.get("user").username;
+        // var now = new Date();
+        // var log_id = this.value.parent_log_item_id;
+        // var work_item_key = this.value.parent_work_item_key;
+        // var task_key = this.key;
+
+        // console.log(work_item_key);
+        // console.log(task_key);
+
+        // // if the task is already complete
+        // if(Session.get("todays_log").work_items[work_item_key].tasks[task_key].completed_by) {
+        //     // if the admin is logged in, remove that the task was completed
+        //     if(this_user == "admin") {
+        //         if(confirm("Reset this task to incomplete?")) {
+        //             var obj = {};
+        //             var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
+        //             obj[field1] = "";
+        //             var field2 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_time";
+        //             obj[field2] = "";
+
+        //             // update the db
+        //             daily_logs.update(
+        //                 {
+        //                     _id : log_id
+        //                 },
+        //                 {
+        //                     $set : obj
+        //                 }
+        //             );
+        //         };
+        //     } else {
+        //         alert("Only the application administrator can edit a completed task.");
+        //     };
+        // } else {
+        //     var obj = {};
+        //     var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
+        //     obj[field1] = this_user;
+        //     var field2 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_time";
+        //     obj[field2] = now;
+
+        //     // update the db
+        //     daily_logs.update(
+        //         {
+        //             _id : log_id
+        //         },
+        //         {
+        //             $set : obj
+        //         }
+        //     );
+        // };
     },
     "click .log_work_item" : function() {
         var id = Session.get("todays_log")._id;
