@@ -453,9 +453,9 @@
         <div class="span4" align="center">
             {{#if todays_log}}
                 <div class="btn-group">
-                    <button class="btn" id="go_back_1_day"><<<</button>
+                    <button class="btn" id="go_back_1_day"><<</button>
                     <button class="btn"><b>{{todays_log.day}}</b></button>
-                    <button class="btn" id="go_forward_1_day">>>></button>
+                    <button class="btn" id="go_forward_1_day">>></button>
                 </div>
             {{else}}
                 no log loaded
@@ -542,7 +542,7 @@
                                 {{/if}}
                             </td>
                         {{/each}}
-                        <td>
+                        <td class="wi_deadline">
                             {{value.deadline}}
                         </td>
                     </tr>

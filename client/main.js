@@ -1077,58 +1077,88 @@ Template.daily_log.events({
         };
     },
     "click .work_item_task" : function() {
-        console.log(this);
-        
-        // var this_user = Session.get("user").username;
-        // var now = new Date();
-        // var log_id = this.value.parent_log_item_id;
-        // var work_item_key = this.value.parent_work_item_key;
-        // var task_key = this.key;
+        var this_user = Session.get("user").username;
+        var now = new Date();
+        var log_id = this.value.parent_log_item_id;
+        var work_item_key = this.value.parent_work_item_key;
+        var task_key_in_db = this.value.task_key_in_db;
 
-        // console.log(work_item_key);
-        // console.log(task_key);
+        console.log("this_user = " + this_user);
+        console.log("log_id = " + log_id);
+        console.log("work_item_key = " + work_item_key);
+        console.log("task_key_in_db = " + task_key_in_db);
+
+        var today_log_in_db = daily_logs.findOne({_id:log_id});
+
+
+
+        //
+        //
+        //
+        //
+        //  ALMOST THERE
+        //  IN LAST TEST, IT WAS DISCOVERED THAT THE TASK_KEY_IN_DB WASN'T BEING
+        //  ACCURATELY RECORDED IN THE WL.REFRESH_LIVE_LOG FUNCTION
+        //  WHAT'S ACTUALLY BEEN RECORDED IS THE TASK_KEY IN SESSION.GET("TODAYS_LOG")
+        //
+        //
+        //
+        //
+        //
+        //
+
+
+
+
+
+
+
+
+
+
+
 
         // // if the task is already complete
-        // if(Session.get("todays_log").work_items[work_item_key].tasks[task_key].completed_by) {
-        //     // if the admin is logged in, remove that the task was completed
-        //     if(this_user == "admin") {
-        //         if(confirm("Reset this task to incomplete?")) {
-        //             var obj = {};
-        //             var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
-        //             obj[field1] = "";
-        //             var field2 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_time";
-        //             obj[field2] = "";
+        if(today_log_in_db.work_items[work_item_key].tasks[task_key_in_db].completed_by) {
+            // if the admin is logged in, remove that the task was completed
+            if(this_user == "admin") {
+                if(confirm("Reset this task to incomplete?")) {
+                    var obj = {};
+                    var field1 = "work_items." + work_item_key + ".tasks." + task_key_in_db + ".completed_by";
+                    obj[field1] = "";
+                    var field2 = "work_items." + work_item_key + ".tasks." + task_key_in_db + ".completed_time";
+                    obj[field2] = "";
 
-        //             // update the db
-        //             daily_logs.update(
-        //                 {
-        //                     _id : log_id
-        //                 },
-        //                 {
-        //                     $set : obj
-        //                 }
-        //             );
-        //         };
-        //     } else {
-        //         alert("Only the application administrator can edit a completed task.");
-        //     };
-        // } else {
-        //     var obj = {};
-        //     var field1 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_by";
-        //     obj[field1] = this_user;
-        //     var field2 = "work_items." + work_item_key + ".tasks." + task_key + ".completed_time";
-        //     obj[field2] = now;
+                    // update the db
+                    daily_logs.update(
+                        {
+                            _id : log_id
+                        },
+                        {
+                            $set : obj
+                        }
+                    );
+                };
+            } else {
+                alert("Only the application administrator can edit a completed task.");
+            };
+        } else {
+            var obj = {};
+            var field1 = "work_items." + work_item_key + ".tasks." + task_key_in_db + ".completed_by";
+            obj[field1] = this_user;
+            var field2 = "work_items." + work_item_key + ".tasks." + task_key_in_db + ".completed_time";
+            obj[field2] = now;
 
-        //     // update the db
-        //     daily_logs.update(
-        //         {
-        //             _id : log_id
-        //         },
-        //         {
-        //             $set : obj
-        //         }
-        //     );
-        // };
+            // update the db
+            daily_logs.update(
+                {
+                    _id : log_id
+                },
+                {
+                    $set : obj
+                }
+            );
+        };
     },
     "click .log_work_item" : function() {
         var id = Session.get("todays_log")._id;

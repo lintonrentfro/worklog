@@ -58,3 +58,6 @@
 	font-size: 10px;
 	line-height: 0px;
 }
+.wi_deadline {
+  text-align: right !important;
+}
