@@ -492,15 +492,11 @@
     {{/if}}
     {{#if todays_log}}
         <div class="row">
-            <div class="span12">
-                <p>
-                    <span id="sort_by_wi_name" class="label label-info pointer">
-                        Sort By Name
-                    </span> 
-                    <span id="sort_by_wi_deadline" class="label label-info pointer">
-                        Sort By Final Deadline
-                    </span>
-                </p>
+            <div class="span6" align="left">
+                <span id="sort_by_wi_name" class="label label-info pointer">Sort By Name</span>
+            </div>
+            <div class="span6" align="right">
+                <span id="sort_by_wi_deadline" class="label label-info pointer">Sort By Deadline</span>
             </div>
         </div>
     {{/if}}
@@ -546,6 +542,9 @@
                                 {{/if}}
                             </td>
                         {{/each}}
+                        <td>
+                            {{value.deadline}}
+                        </td>
                     </tr>
                 </table>
             {{/each}}
