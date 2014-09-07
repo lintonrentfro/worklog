@@ -487,36 +487,21 @@
         </div>
     </div>
     {{#if todays_log}}
-        <div class="row">
+        <div class="row" align="center">
             <div class="span12">
-                <p>
-                    * This work item settings have been changed within last seven days.
-                </p>
+                <span class="well well-small">
+                    {{#if todays_log.notes}}
+                        <b>{{todays_log.notes}}</b>
+                    {{else}}
+                        There are no notifications for today at this time.
+                    {{/if}}
+                    {{#if is_admin}}<span class="pointer" id="edit_todays_notes">edit</span>{{/if}}
+                </span>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
         <div class="row">
             <div class="span12">
-                {{#if todays_log.notes}}
-                    <p>{{todays_log.notes}}
-                {{else}}
-                    <p>There are no notifications for today at this time.
-                {{/if}}
-                {{#if is_admin}}
-                    <button class="btn btn-mini" id="edit_todays_notes">edit</button>
-                {{/if}}
-                </p>
+                <p></p>
             </div>
         </div>
     {{/if}}
@@ -581,4 +566,13 @@
         {{/if}}
         </div>
     </div>
+    {{#if todays_log}}
+        <div class="row">
+            <div class="span12">
+                <p>
+                    * These work item settings have been changed within last seven days.
+                </p>
+            </div>
+        </div>
+    {{/if}}
 </template>

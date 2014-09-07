@@ -665,35 +665,21 @@ Template.daily_log.rendered = function() {
    $('[rel=tooltip]').tooltip();
 };
 Template.daily_log.events({
-    "click .edit_todays_notes" : function() {
-        var new_notes = prompt("Notification Area:");
+    "click #edit_todays_notes" : function() {
+        var new_notes = prompt("Notification Area:", Session.get("todays_log").notes);
         var log_id = Session.get("todays_log")._id;
-        // daily_logs.update(
-        //     {
-        //         _id : log_id
-        //     },
-        //     {
-        //         $set : notes
-        //     }
-        // );
+        daily_logs.update(
+            {
+                _id : log_id
+            },
+            {
+                $set : 
+                    {
+                        notes : new_notes
+                    }
+            }
+        );
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     "click .log_work_item" : function() {
         console.log(this);
     },
