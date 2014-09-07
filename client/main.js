@@ -665,6 +665,35 @@ Template.daily_log.rendered = function() {
    $('[rel=tooltip]').tooltip();
 };
 Template.daily_log.events({
+    "click .edit_todays_notes" : function() {
+        var new_notes = prompt("Notification Area:");
+        var log_id = Session.get("todays_log")._id;
+        // daily_logs.update(
+        //     {
+        //         _id : log_id
+        //     },
+        //     {
+        //         $set : notes
+        //     }
+        // );
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     "click .log_work_item" : function() {
         console.log(this);
     },
@@ -1090,8 +1119,6 @@ Template.daily_log.events({
 
         var today_log_in_db = daily_logs.findOne({_id:log_id});
 
-
-
         //
         //
         //
@@ -1102,21 +1129,11 @@ Template.daily_log.events({
         //  WHAT'S ACTUALLY BEEN RECORDED IS THE TASK_KEY IN SESSION.GET("TODAYS_LOG")
         //
         //
+        //  THIS APPEARS TO BE FIXED -- WATCH CLOSELY
         //
         //
         //
         //
-
-
-
-
-
-
-
-
-
-
-
 
         // // if the task is already complete
         if(today_log_in_db.work_items[work_item_key].tasks[task_key_in_db].completed_by) {
@@ -1161,14 +1178,21 @@ Template.daily_log.events({
         };
     },
     "click .log_work_item" : function() {
+        // add to the notes attribute for this work item on this day's log
+
         var id = Session.get("todays_log")._id;
         console.log(this.value);
         console.log(id);
         if(this.value.notes.length == 0) {
             var new_notes = prompt("Add a note:");
+            var this_user = Session.get("user").username;
+            var now = new Date();
+            var now_hours = now.getHours();
+            var now_minutes = now.getMinutes();
+            var now_time = now_hours + ":" + now_minutes;
             var obj = {};
             var field = "work_items." + this.key + ".notes";
-            obj[field] = new_notes;
+            obj[field] = new_notes + " (" + this_user + ", " + dh.obj_to_time(now) + ")";
             daily_logs.update(
                 {
                     _id : id
@@ -1182,7 +1206,12 @@ Template.daily_log.events({
             console.log("had notes");
             var old_notes = this.value.notes;
             var new_note = prompt("Add a note:");
-            var updated_notes = old_notes + " | " + new_note;
+            var this_user = Session.get("user").username;
+            var now = new Date();
+            var now_hours = now.getHours();
+            var now_minutes = now.getMinutes();
+            var now_time = now_hours + ":" + now_minutes;
+            var updated_notes = old_notes + " | " + new_note + " (" + this_user + ", " + dh.obj_to_time(now) + ")";
             var obj = {};
             var field = "work_items." + this.key + ".notes";
             obj[field] = updated_notes;
@@ -1207,15 +1236,21 @@ Template.reports.events({
     "click #show_log_csv_for_date_range" : function() {
         var start_date = document.getElementById('log_date_start').value;
         var end_date = document.getElementById('log_date_end').value;
-        var logs = daily_logs.find(
-            {
-                day :
-                    {
-                        $gte : start_date,
-                        $lte : end_date
-                    }
-            }
-        ).fetch();
+
+        if(start_date && end_date) {
+            var logs = daily_logs.find(
+                {
+                    day :
+                        {
+                            $gte : start_date,
+                            $lte : end_date
+                        }
+                }
+            ).fetch();
+        } else {
+            alert("You must enter a start and end date for the search.");
+        };
+
         if(logs) {
             console.log("found these days");
             console.log(logs);
@@ -1223,7 +1258,7 @@ Template.reports.events({
             Session.set("daily_log_csv",csv);
 
         } else {
-            console.log("nuh uh");
+            console.log("Error: I didn't find data for that date range.");
         }
     }
 });

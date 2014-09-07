@@ -61,3 +61,6 @@
 .wi_deadline {
   text-align: right !important;
 }
+.small {
+	font-size: 9px;
+}
