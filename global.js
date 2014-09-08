@@ -11,6 +11,19 @@ settings.allow({
     }
 });
 
+applog = new Meteor.Collection("applog");
+applog.allow({
+    insert: function (userId, doc) {
+        return true;
+    },
+    update: function(userId, doc) {
+        return true;
+    },
+    remove: function(userId, doc) {
+        return true;
+    }
+});
+
 workers = new Meteor.Collection("workers");
 workers.allow({
     insert: function (userId, doc) {

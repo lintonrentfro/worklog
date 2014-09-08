@@ -59,29 +59,6 @@ Handlebars.registerHelper('key_value', function(context, options) {
     return result;
 });
 
-/*
- Nav
- */
-// Template.nav.day_started = function() {
-//     var now = new Date();
-//     var year = now.getFullYear();
-//     var month = now.getMonth() + 1;
-//     if(month < 10) {
-//         month = "0" + month;
-//     };
-//     var day = now.getDate();
-//     var ymd = year + '-' + month + '-' + day;
-//     var todays_log = daily_logs.findOne(
-//         {
-//             day : ymd
-//         }
-//     );
-//     if(todays_log) {
-//         return 1;
-//     } else {
-//         return 0;
-//     };
-// };
 Template.nav.events({
     "click #home" : function() {
         /*
@@ -138,6 +115,13 @@ Template.nav.events({
                     var this_user = workers.findOne({username:username,password:password});
                     Session.set("user",this_user);
                     Session.set("error_form_login",null);
+
+                    // log it
+                    var now = new Date();
+                    var user = Session.get("user").username;
+                    var wi = "none";
+                    var action = "login";
+                    wl.logit(now, user, wi, action);
                 } else {
                     Session.set("error_form_login","error");
                 };
