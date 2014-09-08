@@ -497,9 +497,9 @@
                     {{#if todays_log.notes}}
                         <b>{{todays_log.notes}}</b>
                     {{else}}
-                        There are no notifications for today at this time.
+                        There are no notifications for today.
                     {{/if}}
-                    {{#if is_admin}}<span class="pointer" id="edit_todays_notes">edit</span>{{/if}}
+                    {{#if is_admin}}<span class="pointer basic_alert_text" id="edit_todays_notes">edit</span>{{/if}}
                 </span>
             </div>
         </div>
@@ -510,7 +510,7 @@
         </div>
     {{/if}}
     {{#if todays_log}}
-        <div class="row">
+        <div class="row hidden-phone">
             <div class="span6" align="left">
                 <span id="sort_by_wi_name" class="label label-info pointer">Sort By Name</span>
             </div>

@@ -1113,7 +1113,7 @@ Template.daily_log.events({
         //
         //  THIS APPEARS TO BE FIXED -- WATCH CLOSELY
         //
-        //
+        //  UPDATE: IT WAS FIXED WITH REGARD TO UPDATING TASKS, BUT NOT FOR THE WORK ITEM NOTES
         //
         //
 
@@ -1163,8 +1163,8 @@ Template.daily_log.events({
         // add to the notes attribute for this work item on this day's log
 
         var id = Session.get("todays_log")._id;
+        console.log("this value:");
         console.log(this.value);
-        console.log(id);
         if(this.value.notes.length == 0) {
             var new_notes = prompt("Add a note:");
             var this_user = Session.get("user").username;
@@ -1173,7 +1173,7 @@ Template.daily_log.events({
             var now_minutes = now.getMinutes();
             var now_time = now_hours + ":" + now_minutes;
             var obj = {};
-            var field = "work_items." + this.key + ".notes";
+            var field = "work_items." + this.value.wi_key_in_db + ".notes";
             obj[field] = new_notes + " (" + this_user + ", " + dh.obj_to_time(now) + ")";
             daily_logs.update(
                 {
@@ -1195,7 +1195,7 @@ Template.daily_log.events({
             var now_time = now_hours + ":" + now_minutes;
             var updated_notes = old_notes + " | " + new_note + " (" + this_user + ", " + dh.obj_to_time(now) + ")";
             var obj = {};
-            var field = "work_items." + this.key + ".notes";
+            var field = "work_items." + this.value.wi_key_in_db + ".notes";
             obj[field] = updated_notes;
             daily_logs.update(
                 {
