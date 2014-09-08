@@ -80,7 +80,11 @@
                     <input class="span3" type="text" id="new_deadline" value="{{edit_task.deadline}}"><br>
                     <label>Notes</label>
                     <input class="span6" type="text" id="new_notes" value="{{edit_task.notes}}"><br>
-                    <button type="btn" class="btn" id="update_task">update task</button>
+                    {{#if edit_task.group}}
+                        <button type="btn" class="btn" id="update_task">update task</button>
+                    {{else}}
+                        <span class="basic_alert_text">cannot update task until a task group is assigned to it</span>
+                    {{/if}}
                 </form>
             </div>
         </div>

@@ -489,6 +489,18 @@ Template.settings.events({
                 }
             );
         };
+        // this block needed to update the work item held in Session when a new task has been added
+        // to prevent an updating error when the user tries to edit the new task immediately after
+        // adding it
+        var id = Session.get("edit_work_item")._id;
+        var edit_work_item = work_items.findOne(
+            {
+                _id : id
+            }
+        );
+        Session.set("edit_work_item",edit_work_item);
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        //
         return false;
     },
     "click .edit_task" : function() {
@@ -540,9 +552,9 @@ Template.settings.events({
         };
     },
     "click #update_task" : function() {
-        // original
         var current_group_with_spaces = document.getElementById('remove_task_group_from_task').innerHTML;
         var current_group = current_group_with_spaces.trim();
+
         var now = new Date();
         var task_key = Session.get("edit_task_key");
         var work_item = Session.get("edit_work_item");

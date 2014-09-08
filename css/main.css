@@ -61,6 +61,8 @@
 .wi_deadline {
   text-align: right !important;
 }
-.small {
-	font-size: 9px;
+.basic_alert_text {
+	font-size: 12px;
+	color: red;
+	font-weight: bold;
 }
