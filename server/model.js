@@ -17,13 +17,13 @@ Meteor.publish("daily_logs", function() {
 	return daily_logs.find();
 });
 
-Meteor.methods({
-    getlog: function(obj) {
-        if(obj.queryType == "by_date") {
-        	return "it's by date";
-        };
-        if(obj.queryType == "by_user") {
-        	return "it's by user";
-        };
-    }
-});
+// Meteor.methods({
+//     getlog: function(obj) {
+//         if(obj.queryType == "by_date") {
+//         	return "it's by date";
+//         };
+//         if(obj.queryType == "by_user") {
+//         	return "it's by user";
+//         };
+//     }
+// });
