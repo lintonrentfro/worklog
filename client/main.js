@@ -1101,22 +1101,6 @@ Template.daily_log.events({
 
         var today_log_in_db = daily_logs.findOne({_id:log_id});
 
-        //
-        //
-        //
-        //
-        //  ALMOST THERE
-        //  IN LAST TEST, IT WAS DISCOVERED THAT THE TASK_KEY_IN_DB WASN'T BEING
-        //  ACCURATELY RECORDED IN THE WL.REFRESH_LIVE_LOG FUNCTION
-        //  WHAT'S ACTUALLY BEEN RECORDED IS THE TASK_KEY IN SESSION.GET("TODAYS_LOG")
-        //
-        //
-        //  THIS APPEARS TO BE FIXED -- WATCH CLOSELY
-        //
-        //  UPDATE: IT WAS FIXED WITH REGARD TO UPDATING TASKS, BUT NOT FOR THE WORK ITEM NOTES
-        //
-        //
-
         // // if the task is already complete
         if(today_log_in_db.work_items[work_item_key].tasks[task_key_in_db].completed_by) {
             // if the admin is logged in, remove that the task was completed
@@ -1200,6 +1184,52 @@ Template.daily_log.events({
             daily_logs.update(
                 {
                     _id : id
+                },
+                {
+                    $set : obj
+                }
+            );
+        };
+    },
+    "click .no_work" : function() {
+        // if a work item has no work for a specific day, the log can record
+
+        var this_user = Session.get("user").username;
+        var now = new Date();
+        var log_id = Session.get("todays_log")._id;
+        var wi_key = this.value.wi_key_in_db;
+
+        console.log("this_user = " + this_user);
+        console.log("log_id = " + log_id);
+
+        var today_log_in_db = daily_logs.findOne({_id:log_id});
+
+        var obj = {};
+        var field = "work_items." + wi_key + ".no_work_today";
+
+        if(today_log_in_db.work_items[wi_key].no_work_today === "no_work_today") {
+            if(this_user == "admin") {
+                if(confirm("Undo that this work item is currently shown to have 'no work' for today?")) {
+                    console.log("this item's no work status now set to '' ... ");
+                    obj[field] = "";
+                    daily_logs.update(
+                        {
+                            _id : log_id
+                        },
+                        {
+                            $set : obj
+                        }
+                    );
+                };
+            } else {
+                alert("Only the application administrator can undo the 'no work' flag.");
+            };
+        } else {
+            console.log("this item's no work status now set to 'no_work_today' ... ");
+            obj[field] = "no_work_today";
+            daily_logs.update(
+                {
+                    _id : log_id
                 },
                 {
                     $set : obj

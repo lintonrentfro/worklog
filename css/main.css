@@ -66,3 +66,6 @@
 	color: red;
 	font-weight: bold;
 }
+.no_work_today td {
+	color: #D3D3D3;
+}
