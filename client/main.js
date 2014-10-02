@@ -31,6 +31,9 @@ Handlebars.registerHelper("settings", function() {
         return Session.get("settings");
     };
 });
+Handlebars.registerHelper("connected", function() {
+    return Meteor.status().connected;
+});
 
 /*
  Global Login Helpers

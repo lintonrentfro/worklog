@@ -410,7 +410,18 @@
 <template name="nav">
     <div class="navbar">
         <div class="navbar-inner">
-            <a id="home" class="brand" href="javascript:void(0)">WorkLog</a>
+            <a id="home" class="brand" href="javascript:void(0)">
+                WorkLog
+                {{#if connected}}
+                    <span style="color: green">
+                        connected
+                    </span>
+                {{else}}
+                    <span style="color: red">
+                        disconnected
+                    </span>
+                {{/if}}
+            </a>
             <ul class="nav">
                 {{#if is_logged_in}}
                     <li id="daily_log" class="{{#if daily_log}}{{daily_log}}{{/if}}">
