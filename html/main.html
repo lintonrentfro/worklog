@@ -35,27 +35,43 @@
             </div>
         </div>
     {{else}}
-        <div class="row">
-            <div class="span12">
-                <h3>Export Daily Logs to CSV Format</h3>
+        {{#if printable_daily_log}}
+            <div class="row">
+                <div class="span12">
+                    {{{printable_daily_log}}}
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="span12">
-                <h3>Search by Date Range</h3>
+        {{else}}
+            <div class="row">
+                <div class="span12">
+                    <h3>Daily Log Detail Report</h3>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="span12">
-                <label>Start Date</label>
-                <input class="span3" id="log_date_start" type="text" placeholder="ex: 2014-04-12">
-                <br>
-                <label>End Date</label>
-                <input class="span3" id="log_date_end" type="text" placeholder="ex: 2014-04-16">
-                <br>
-                <button class="btn" id="show_log_csv_for_date_range" type="button">Load</button>
+            <div class="row">
+                <div class="span12">
+                    <label>Date</label>
+                    <input class="span3" id="printable_log_date" type="text" placeholder="ex: 2014-02-13">
+                    <br>
+                    <button class="btn" id="show_printable_log_for_date" type="button">Load</button>
+                </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="span12">
+                    <h3>Export Daily Logs to CSV Format</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>Start Date</label>
+                    <input class="span3" id="log_date_start" type="text" placeholder="ex: 2014-04-12">
+                    <br>
+                    <label>End Date</label>
+                    <input class="span3" id="log_date_end" type="text" placeholder="ex: 2014-04-16">
+                    <br>
+                    <button class="btn" id="show_log_csv_for_date_range" type="button">Load</button>
+                </div>
+            </div>
+        {{/if}}
     {{/if}}
 </template>
 

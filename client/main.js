@@ -1247,6 +1247,11 @@ Template.reports.daily_log_csv = function() {
         return Session.get("daily_log_csv");
     };
 };
+Template.reports.printable_daily_log = function() {
+    if(Session.get("printable_daily_log")) {
+        return Session.get("printable_daily_log");
+    };
+};
 Template.reports.events({
     "click #show_log_csv_for_date_range" : function() {
         var start_date = document.getElementById('log_date_start').value;
@@ -1271,6 +1276,29 @@ Template.reports.events({
             console.log(logs);
             var csv = wl.daily_log_csv_report(logs);
             Session.set("daily_log_csv",csv);
+
+        } else {
+            console.log("Error: I didn't find data for that date range.");
+        }
+    },
+    "click #show_printable_log_for_date" : function() {
+        var log_date = document.getElementById('printable_log_date').value;
+
+        if(log_date) {
+            var log = daily_logs.find(
+                {
+                    day : log_date
+                }
+            ).fetch();
+        } else {
+            alert("You must enter a date for a log that exists.");
+        };
+
+        if(log) {
+            console.log("found the log");
+            // console.log(log);
+            var str = wl.daily_log_printable_report(log[0]);
+            Session.set("printable_daily_log",str);
 
         } else {
             console.log("Error: I didn't find data for that date range.");
