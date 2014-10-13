@@ -566,7 +566,7 @@
                             {{/if}}
                         </td>
                         {{#each key_value value.tasks}}
-                            <td class="work_item_task {{value.visible}} {{#if value.completed_by}}completed_{{value.lateness}}{{else}}{{value.lateness}}{{/if}} pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
+                            <td class="work_item_task {{value.visible}} pointer" {{#if value.notes}} rel="tooltip" title="{{value.notes}}"{{else}} rel="tooltip" title="no notes"{{/if}}>
                                 <span class="
                                     {{#if value.completed_by}}
                                         task_completed
@@ -579,12 +579,20 @@
                                 <br>
                                 <span class="task_deadline">
                                     {{#if value.deadline}}
+                                        {{#if value.lateness}}
+                                            <span class="completed_{{value.lateness}}">
+                                        {{/if}}
                                         Due: {{value.deadline}}
+                                        {{#if value.lateness}}
+                                            </span>
+                                        {{/if}}
                                     {{/if}}
                                 </span>
                                 <br>
                                 {{#if value.completed_by}}
-                                    {{value.completed_by}}@{{value.completed_time}}
+                                    <span class="completed_{{value.lateness}}">
+                                        {{value.completed_by}}@{{value.completed_time}}
+                                    </span>
                                 {{/if}}
                             </td>
                         {{/each}}

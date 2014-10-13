@@ -37,22 +37,23 @@
 	cursor: pointer;
 }
 .task_late {
-	background-color : red;
+	/*background-color : red;*/
+	color: red;
 }
 .task_final_half_hour {
 	background-color : gold;
 }
 .completed_task_late {
 	color: red;
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 .completed_task_final_half_hour {
 	color: gold;
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 .completed_ {
 	color: green;
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 .unstyled_list_small {
 	font-size: 10px;
